@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Thực Đơn & Kiểm Thực 3 Bước | QĐ 1246/QĐ-BYT</title>
+  
+  <!-- Tailwind CSS: Local Vendor with CDN Fallback -->
+  <script src="/static/vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Vue 3: Local Vendor with CDN Fallback -->
+  <script src="/static/vendor/vue.global.js"></script>
+  <script>
+    if (!window.Vue) {
+      document.write('<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"><\/script>');
+    }
+  </script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    [v-cloak] { display: block !important; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+<div id="app" class="min-h-screen flex flex-col">
+
+  <!-- TOAST NOTIFICATION -->
+  <div v-if="toast.show" 
+       :class="{'bg-emerald-600 text-white': toast.type === 'success', 'bg-rose-600 text-white': toast.type === 'danger'}"
+       class="fixed bottom-5 right-5 z-50 px-5 py-3 rounded-lg shadow-xl font-medium flex items-center gap-3 transition-all">
+    <span>{{ toast.message }}</span>
+  </div>
+
+  <!-- TOP HEADER (NO-PRINT) -->
+  <header class="no-print bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Facility -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+          🥗
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-slate-900 leading-tight">
+            SỔ KIỂM THỰC 3 BƯỚC & LƯU MẪU THỨC ĂN
+          </h1>
+          <p class="text-xs text-slate-500 font-medium truncate max-w-md">
+            {{ config['Tên cơ sở'] || 'Công ty TNHH TMDV Tân Hồ Tây' }} • QĐ 1246/QĐ-BYT
+          </p>
+        </div>
+      </div>
+
+      <!-- Date Navigator -->
+      <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+        <button @click="changeDate(-1)" class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition">
+          ◀
+        </button>
+        <input type="date" v-model="selectedDate" 
+               class="bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold">
+          {{ currentDayName }}
+        </span>
+        <button @click="changeDate(1)" class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition">
+          ▶
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button @click="triggerAutoFill" 
+                class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 border border-indigo-200 transition shadow-sm"
+                title="Tự động tính định lượng, giờ nhận hàng, giờ nấu, giờ chia và giờ hủy mẫu 24h">
+          <span>✨</span>
+          <span>Điền tự động</span>
+        </button>
+        <button @click="saveDailyRecord" 
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-sm transition">
+          <span>💾</span>
+          <span>Lưu ngày</span>
+        </button>
+        <button @click="exportExcel" 
+                class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 border border-slate-300 transition">
+          <span>📊</span>
+          <span>Xuất Excel</span>
+        </button>
+        <button @click="printCurrent" 
+                class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
+          <span>🖨️</span>
+          <span>In</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- MAIN NAVIGATION TABS -->
+    <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto border-t border-slate-100 py-1 text-xs font-medium text-slate-600">
+      <button @click="currentTab = 'dashboard'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'dashboard'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        📊 Tổng quan
+      </button>
+      <button @click="currentTab = 'menu'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'menu'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        📅 Thực đơn tuần
+      </button>
+      <button @click="currentTab = 'estimations'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'estimations'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        🛒 Dự trù nguyên liệu
+      </button>
+      <button @click="currentTab = 'step1'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'step1'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        📋 Mẫu 1: Bước 1 (Nhận hàng)
+      </button>
+      <button @click="currentTab = 'step2'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'step2'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        🍳 Mẫu 2: Bước 2 (Chế biến)
+      </button>
+      <button @click="currentTab = 'step3'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'step3'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        🍽️ Mẫu 3: Bước 3 (Trước khi ăn)
+      </button>
+      <button @click="currentTab = 'labels'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'labels'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        🏷️ Mẫu 4: Nhãn lưu mẫu
+      </button>
+      <button @click="currentTab = 'sampling'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'sampling'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        🧊 Mẫu 5: Sổ lưu & hủy mẫu
+      </button>
+      <button @click="currentTab = 'audit'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'audit'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap flex items-center gap-1">
+        🛡️ Kiểm tra an toàn
+        <span v-if="auditData && auditData.error_count > 0" class="px-1.5 py-0.2 bg-rose-500 text-white rounded-full text-[10px]">
+          {{ auditData.error_count }}
+        </span>
+      </button>
+      <button @click="currentTab = 'settings'" :class="{'bg-emerald-50 text-emerald-700 font-bold border-b-2 border-emerald-600': currentTab === 'settings'}" class="px-3.5 py-2 rounded-t-lg transition whitespace-nowrap">
+        ⚙️ Cài đặt & Danh mục
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
+
+    <!-- ==================== TAB 1: DASHBOARD ==================== -->
+    <div v-show="currentTab === 'dashboard'" class="space-y-6">
+      
+      <!-- Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tổng Suất Ăn Trong Ngày</p>
+            <h3 class="text-3xl font-extrabold text-slate-900 mt-1">{{ totalDayPortions }}</h3>
+            <p class="text-xs text-slate-500 mt-1">Trưa: {{ portions.lunch_portions }} | Chiều: {{ portions.afternoon_portions }} | Tối: {{ portions.dinner_portions }}</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
+            🍱
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tổng Số Món Ăn</p>
+            <h3 class="text-3xl font-extrabold text-indigo-600 mt-1">{{ dailyData.step2 ? dailyData.step2.length : 0 }}</h3>
+            <p class="text-xs text-slate-500 mt-1">Đầy đủ ca Trưa, Chiều & Tối</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold">
+            🥘
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kiểm Tra An Toàn (QĐ 1246)</p>
+            <h3 class="text-3xl font-extrabold mt-1" :class="{'text-emerald-600': auditData && auditData.error_count === 0, 'text-rose-600': auditData && auditData.error_count > 0}">
+              {{ auditData ? auditData.passed_count : 24 }}/24
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+              <span v-if="auditData && auditData.error_count === 0" class="text-emerald-600 font-semibold">✓ Đạt toàn diện</span>
+              <span v-else class="text-rose-600 font-semibold">⚠ Cần hoàn thiện thông tin</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-bold">
+            🛡️
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hũ Mẫu Lưu Trong Tủ</p>
+            <h3 class="text-3xl font-extrabold text-sky-600 mt-1">{{ dailyData.sampling ? dailyData.sampling.length : 0 }}</h3>
+            <p class="text-xs text-slate-500 mt-1">Nhiệt độ {{ config['Nhiệt độ bảo quản mẫu'] || '5°C' }} • Hủy sau 24h</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-2xl font-bold">
+            🧊
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions Banner -->
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="px-2.5 py-1 bg-white/20 text-white rounded-full text-xs font-semibold uppercase tracking-wider">Hồ Sơ Ngày: {{ selectedDate }}</span>
+          <h2 class="text-xl font-bold mt-2">Hồ sơ kiểm thực & lưu mẫu cho {{ currentDayName }}</h2>
+          <p class="text-sm text-emerald-100 mt-1">Dữ liệu được lưu vĩnh viễn trong hệ thống, không sợ bị ghi đè hay mất công thức như file Excel.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="triggerAutoFill" class="px-5 py-2.5 bg-white text-emerald-800 font-bold text-sm rounded-xl hover:bg-emerald-50 transition shadow-md flex items-center gap-2">
+            <span>✨</span>
+            <span>Điền Tự Động Ngày Này</span>
+          </button>
+          <button @click="saveDailyRecord" class="px-5 py-2.5 bg-emerald-950/40 border border-white/30 text-white font-bold text-sm rounded-xl hover:bg-emerald-950/60 transition">
+            Lưu Hồ Sơ
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu of the day & Audit preview -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Today's Dishes -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 card-shadow p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+              <span>🍽️</span> Danh sách món ăn trong ngày ({{ currentDayName }})
+            </h3>
+            <button @click="currentTab = 'menu'" class="text-xs font-semibold text-emerald-600 hover:underline">Chỉnh sửa thực đơn</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left table-custom">
+              <thead>
+                <tr>
+                  <th class="w-12 text-center">TT</th>
+                  <th class="w-24">Ca ăn</th>
+                  <th>Tên món ăn</th>
+                  <th>Nguyên liệu chính</th>
+                  <th class="text-center">Số suất</th>
+                  <th class="text-center">Loại mẫu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, idx) in (dailyData.step2 || [])" :key="idx">
+                  <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                  <td>
+                    <span :class="{'bg-amber-100 text-amber-800': item.ca === 'TRƯA', 'bg-sky-100 text-sky-800': item.ca === 'CHIỀU', 'bg-indigo-100 text-indigo-800': item.ca === 'TỐI'}" 
+                          class="px-2 py-0.5 rounded text-xs font-bold">
+                      {{ item.ca }}
+                    </span>
+                  </td>
+                  <td class="font-bold text-slate-800">{{ item.dish_name }}</td>
+                  <td class="text-slate-600 text-xs">{{ item.main_ingredient }}</td>
+                  <td class="text-center font-semibold">{{ item.portions }}</td>
+                  <td class="text-center">
+                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">
+                      {{ (dailyData.sampling && dailyData.sampling[idx]) ? dailyData.sampling[idx].sample_amount : '100 g' }}
+                    </span>
+                  </td>
+                </tr>
+                <tr v-if="!dailyData.step2 || dailyData.step2.length === 0">
+                  <td colspan="6" class="text-center py-8 text-slate-400">Chưa có món ăn nào trong ngày này. Hãy bấm "Điền Tự Động" hoặc chỉnh sửa Thực Đơn Tuần!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 24-Audit Checklist Preview -->
+        <div class="bg-white rounded-2xl border border-slate-200 card-shadow p-5 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+              <span>🛡️</span> Rà Soát Quy Chuẩn
+            </h3>
+            <button @click="currentTab = 'audit'" class="text-xs font-semibold text-emerald-600 hover:underline">Chi tiết</button>
+          </div>
+
+          <div class="space-y-2.5 flex-1 overflow-y-auto max-h-[380px] pr-1">
+            <div v-for="item in (auditData && auditData.checklist ? auditData.checklist.slice(0, 8) : [])" :key="item.id"
+                 class="p-2.5 rounded-xl border border-slate-100 bg-slate-50 flex items-start gap-2.5">
+              <span v-if="item.status === 'OK'" class="text-emerald-600 text-sm font-bold">✓</span>
+              <span v-else-if="item.status === 'CẢNH BÁO'" class="text-amber-500 text-sm font-bold">⚠</span>
+              <span v-else class="text-rose-500 text-sm font-bold">✕</span>
+              <div class="text-xs flex-1">
+                <p class="font-semibold text-slate-800">{{ item.title }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">{{ item.value }}</p>
+              </div>
+            </div>
+          </div>
+
+          <button @click="currentTab = 'audit'" class="w-full mt-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+            Xem Toàn Bộ 24 Tiêu Chí An Toàn →
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: WEEKLY MENU PLANNER ==================== -->
+    <div v-show="currentTab === 'menu'" class="space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 card-shadow">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Kế Hoạch Thực Đơn Hàng Tuần</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Lập thực đơn 7 ngày từ Thứ 2 đến Chủ nhật, cấu hình số suất ăn và ca làm việc</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="saveWeeklyMenu" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center gap-2">
+            <span>💾</span>
+            <span>Lưu Thực Đơn Tuần</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Weekly Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div v-for="day in daysOfWeek" :key="day" 
+             :class="{'ring-2 ring-emerald-500 bg-emerald-50/20': day === currentDayName}"
+             class="bg-white rounded-2xl border border-slate-200 card-shadow p-4 flex flex-col justify-between">
+          
+          <div v-if="weeklyMenu && weeklyMenu[day]">
+            <!-- Day Header -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+              <span class="font-extrabold text-base text-slate-800">{{ day }}</span>
+              <span v-if="day === currentDayName" class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
+                Hôm Nay
+              </span>
+            </div>
+
+            <!-- Lunch Dishes -->
+            <div class="mb-4">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1">
+                ☀️ Ca Trưa
+              </span>
+              <div class="space-y-2 mt-1.5 text-xs">
+                <div>
+                  <label class="text-[10px] text-slate-400 font-semibold block">Món chính</label>
+                  <input type="text" v-model="weeklyMenu[day].lunch.main" placeholder="Cá lóc kho, Gà chiên..." 
+                         class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium focus:bg-white focus:ring-1 focus:ring-emerald-500">
+                </div>
+                <div>
+                  <label class="text-[10px] text-slate-400 font-semibold block">Món phụ</label>
+                  <input type="text" v-model="weeklyMenu[day].lunch.sub" placeholder="Thịt xào, Chả lụa..." 
+                         class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium focus:bg-white focus:ring-1 focus:ring-emerald-500">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món xào</label>
+                    <input type="text" v-model="weeklyMenu[day].lunch.stir" placeholder="Cải ngọt..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món canh</label>
+                    <input type="text" v-model="weeklyMenu[day].lunch.soup" placeholder="Canh chua..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Afternoon Dishes -->
+            <div class="mb-4 pt-2 border-t border-slate-100">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-600 flex items-center gap-1">
+                🌤️ Ca Chiều (Tăng ca)
+              </span>
+              <div class="space-y-2 mt-1.5 text-xs">
+                <div>
+                  <label class="text-[10px] text-slate-400 font-semibold block">Món chính</label>
+                  <input type="text" v-model="weeklyMenu[day].afternoon.main" placeholder="Gà kho gừng..." 
+                         class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món phụ</label>
+                    <input type="text" v-model="weeklyMenu[day].afternoon.sub" placeholder="Cá cơm..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món xào</label>
+                    <input type="text" v-model="weeklyMenu[day].afternoon.stir" placeholder="Bí xanh..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                </div>
+                <div>
+                  <label class="text-[10px] text-slate-400 font-semibold block">Món canh</label>
+                  <input type="text" v-model="weeklyMenu[day].afternoon.soup" placeholder="Rau má..." 
+                         class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium">
+                </div>
+                <div>
+                  <label class="text-[10px] text-indigo-500 font-bold block">🍜 Món nước chiều</label>
+                  <input type="text" v-model="weeklyMenu[day].afternoon.soup_dish" placeholder="Phở gà, Hủ tiếu, Bún riêu..." 
+                         class="w-full bg-indigo-50/50 border border-indigo-200 rounded-lg px-2.5 py-1.5 font-bold text-indigo-900">
+                </div>
+              </div>
+            </div>
+
+            <!-- Dinner Dishes -->
+            <div class="pt-2 border-t border-slate-100">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1">
+                🌙 Ca Tối
+              </span>
+              <div class="space-y-2 mt-1.5 text-xs">
+                <div>
+                  <label class="text-[10px] text-slate-400 font-semibold block">Món chính tối</label>
+                  <input type="text" v-model="weeklyMenu[day].dinner.main" placeholder="Gà kho, Thịt..." 
+                         class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món phụ</label>
+                    <input type="text" v-model="weeklyMenu[day].dinner.sub" placeholder="Cá..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 font-semibold block">Món xào</label>
+                    <input type="text" v-model="weeklyMenu[day].dinner.stir" placeholder="Bí xanh..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Portions configuration for this day -->
+          <div class="mt-4 pt-3 border-t border-slate-200">
+            <span class="text-[11px] font-bold text-slate-700 block mb-1.5">⚙️ Suất Ăn & Ca Hôm Nay:</span>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <label class="text-[10px] text-slate-400 block">Suất trưa</label>
+                <input type="number" v-model.number="portions.lunch_portions" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 font-semibold">
+              </div>
+              <div>
+                <label class="text-[10px] text-slate-400 block">Suất chiều</label>
+                <input type="number" v-model.number="portions.afternoon_portions" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 font-semibold">
+              </div>
+              <div>
+                <label class="text-[10px] text-slate-400 block">Suất tối</label>
+                <input type="number" v-model.number="portions.dinner_portions" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 font-semibold">
+              </div>
+              <div>
+                <label class="text-[10px] text-slate-400 block">Suất món nước</label>
+                <input type="number" v-model.number="portions.afternoon_soup_portions" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 font-semibold">
+              </div>
+            </div>
+            <div class="flex items-center gap-4 mt-2 text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" v-model="portions.has_overtime" class="rounded text-emerald-600">
+                <span>Tăng ca</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" v-model="portions.has_dinner" class="rounded text-emerald-600">
+                <span>Có ca tối</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: ESTIMATIONS (DỰ TRÙ NGUYÊN LIỆU) ==================== -->
+    <div v-show="currentTab === 'estimations'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>🛒</span> Bảng Dự Trù Nguyên Liệu Theo Định Lượng
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Tự động tính toán lượng CẦN theo số suất ăn & định mức (g/suất). Nhập "Thực Nhận" để hệ thống tự động so sánh dung sai ±5%.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-xl font-bold">
+            Dung sai cho phép: ±{{ config['Dung sai định lượng cho phép (± %)'] || 5 }}%
+          </span>
+          <button @click="saveDailyRecord" class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-emerald-700 transition">
+            💾 Lưu Bảng Dự Trù
+          </button>
+        </div>
+      </div>
+
+      <!-- Estimations Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">STT</th>
+                <th>Nguyên liệu</th>
+                <th>Nhóm định lượng</th>
+                <th class="text-center">Định mức/suất</th>
+                <th class="text-center">Số suất</th>
+                <th class="text-right">Lượng Cần (Dự trù)</th>
+                <th class="text-center">ĐVT</th>
+                <th class="text-center">Khoảng cho phép (±5%)</th>
+                <th class="w-32 text-center bg-amber-50 text-amber-900">THỰC NHẬN</th>
+                <th class="text-center">Độ lệch</th>
+                <th class="text-center">Đánh giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, idx) in (dailyData.estimations || [])" :key="idx" 
+                  :class="{'bg-slate-50/70': item.type === 'II'}">
+                <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                <td class="font-bold text-slate-900">
+                  {{ item.ingredient }}
+                  <span v-if="item.type === 'II'" class="text-[10px] ml-1 bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded">Dùng chung</span>
+                </td>
+                <td class="text-xs text-slate-600">{{ item.norm_group }}</td>
+                <td class="text-center font-medium">{{ item.norm_per_portion }} {{ item.norm_unit }}</td>
+                <td class="text-center font-semibold">{{ item.portions }}</td>
+                <td class="text-right font-extrabold text-indigo-700">{{ item.need_amount }}</td>
+                <td class="text-center font-medium text-slate-500">{{ item.unit }}</td>
+                <td class="text-center text-xs text-slate-500">
+                  {{ item.min_amount }} – {{ item.max_amount }}
+                </td>
+                <td class="bg-amber-50/50 p-1.5 text-center">
+                  <input type="number" step="0.1" 
+                         :value="item.actual_received" 
+                         @input="updateActualReceived(item, $event.target.value)"
+                         class="w-24 text-center font-bold text-slate-900 bg-white border border-amber-300 rounded-lg py-1 px-2 focus:ring-2 focus:ring-emerald-500">
+                </td>
+                <td class="text-center text-xs font-semibold"
+                    :class="{'text-emerald-600': Math.abs(item.diff_percent) <= 5, 'text-rose-600': Math.abs(item.diff_percent) > 5}">
+                  {{ item.diff_percent > 0 ? '+' : '' }}{{ item.diff_percent }}%
+                </td>
+                <td class="text-center">
+                  <span :class="{'badge-ok': item.evaluation.includes('Trong dung sai'), 'badge-error': item.evaluation.includes('⚠')}"
+                        class="px-2.5 py-1 rounded-full text-xs font-bold inline-block">
+                    {{ item.evaluation }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: MẪU 1 - BƯỚC 1 (TRƯỚC CHẾ BIẾN) ==================== -->
+    <div v-show="currentTab === 'step1'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Theo Quyết định 1246/QĐ-BYT</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">MẪU SỐ 1: KIỂM TRA TRƯỚC KHI CHẾ BIẾN THỨC ĂN (BƯỚC 1)</h2>
+          <p class="text-xs text-slate-500">Kiểm tra nguồn gốc, hạn dùng, chứng từ và cảm quan nguyên liệu thực phẩm tươi sống & bao gói sẵn</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="printCurrent" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+            <span>🖨️</span>
+            <span>In Biểu Mẫu 1</span>
+          </button>
+          <button @click="saveDailyRecord" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
+            💾 Lưu Bước 1
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 1 Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">TT</th>
+                <th>Tên thực phẩm</th>
+                <th class="w-24 text-center">Giờ nhập</th>
+                <th class="text-right">Khối lượng</th>
+                <th class="w-16 text-center">ĐVT</th>
+                <th>Nơi cung cấp (Tên CS)</th>
+                <th>Địa chỉ, SĐT</th>
+                <th>Người giao</th>
+                <th class="text-center">Cảm quan</th>
+                <th class="text-center">Chứng từ</th>
+                <th>Biện pháp xử lý</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, idx) in (dailyData.step1 || [])" :key="idx"
+                  :class="{'bg-slate-50/60': item.type === 'II'}">
+                <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                <td class="font-bold text-slate-900">
+                  {{ item.ingredient }}
+                  <span v-if="item.type === 'II'" class="text-[10px] ml-1 bg-slate-200 text-slate-600 px-1.5 py-0.2 rounded font-normal">Gia vị/Khô</span>
+                </td>
+                <td class="text-center">
+                  <input type="text" v-model="item.time_in" class="w-16 text-center font-medium bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-xs">
+                </td>
+                <td class="text-right font-bold text-slate-800">{{ item.quantity }}</td>
+                <td class="text-center text-xs text-slate-500">{{ item.unit }}</td>
+                <td>
+                  <select v-model="item.supplier_name" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs font-semibold">
+                    <option v-for="s in suppliers" :key="s.id" :value="s.name">{{ s.name }}</option>
+                  </select>
+                </td>
+                <td class="text-xs text-slate-600 max-w-xs truncate">{{ item.supplier_address }}</td>
+                <td class="text-xs font-medium text-slate-700">{{ item.delivery_person }}</td>
+                <td class="text-center">
+                  <button @click="item.sensory_passed = !item.sensory_passed" 
+                          :class="item.sensory_passed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'"
+                          class="px-2 py-1 text-xs font-bold rounded-lg border transition">
+                    {{ item.sensory_passed ? '✓ Đạt' : '✕ KĐ' }}
+                  </button>
+                </td>
+                <td class="text-center text-xs text-slate-700 font-semibold">{{ item.certificate }}</td>
+                <td class="text-xs text-slate-500">{{ item.action }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: MẪU 2 - BƯỚC 2 (KHI CHẾ BIẾN) ==================== -->
+    <div v-show="currentTab === 'step2'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Theo Quyết định 1246/QĐ-BYT</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">MẪU SỐ 2: KIỂM TRA KHI CHẾ BIẾN THỨC ĂN (BƯỚC 2)</h2>
+          <p class="text-xs text-slate-500">Kiểm tra điều kiện vệ sinh, thời gian nấu chín và quy tắc an toàn 2 giờ của Bộ Y Tế</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="printCurrent" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+            <span>🖨️</span>
+            <span>In Biểu Mẫu 2</span>
+          </button>
+          <button @click="saveDailyRecord" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
+            💾 Lưu Bước 2
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2 Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">TT</th>
+                <th class="w-20 text-center">Ca ăn</th>
+                <th>Tên món ăn</th>
+                <th>Nguyên liệu chính</th>
+                <th class="w-16 text-center">Số suất</th>
+                <th class="w-24 text-center">Giờ sơ chế</th>
+                <th class="w-24 text-center">Giờ nấu xong</th>
+                <th class="text-center">Người nấu</th>
+                <th class="text-center">Dụng cụ</th>
+                <th class="text-center">Khu vực</th>
+                <th class="text-center">Cảm quan</th>
+                <th class="text-center">Cảnh báo 2 Giờ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, idx) in (dailyData.step2 || [])" :key="idx">
+                <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                <td class="text-center">
+                  <span :class="{'bg-amber-100 text-amber-800': item.ca === 'TRƯA', 'bg-sky-100 text-sky-800': item.ca === 'CHIỀU', 'bg-indigo-100 text-indigo-800': item.ca === 'TỐI'}"
+                        class="px-2 py-0.5 rounded text-xs font-bold">
+                    {{ item.ca }}
+                  </span>
+                </td>
+                <td class="font-bold text-slate-900">{{ item.dish_name }}</td>
+                <td class="text-xs text-slate-600">{{ item.main_ingredient }}</td>
+                <td class="text-center font-bold text-slate-800">{{ item.portions }}</td>
+                <td class="text-center">
+                  <input type="text" v-model="item.prep_time" class="w-16 text-center font-medium bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-xs">
+                </td>
+                <td class="text-center">
+                  <input type="text" v-model="item.cook_time" class="w-16 text-center font-medium bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-xs">
+                </td>
+                <td class="text-center">
+                  <span class="text-emerald-700 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded">Đạt</span>
+                </td>
+                <td class="text-center">
+                  <span class="text-emerald-700 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded">Đạt</span>
+                </td>
+                <td class="text-center">
+                  <span class="text-emerald-700 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded">Đạt</span>
+                </td>
+                <td class="text-center">
+                  <button @click="item.sensory_passed = !item.sensory_passed" 
+                          :class="item.sensory_passed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'"
+                          class="px-2 py-1 text-xs font-bold rounded-lg border transition">
+                    {{ item.sensory_passed ? '✓ Đạt' : '✕ KĐ' }}
+                  </button>
+                </td>
+                <td class="text-center">
+                  <span :class="{'badge-ok': item.safety_warning === 'OK', 'badge-warn': item.safety_warning && item.safety_warning.includes('⚠')}"
+                        class="px-2.5 py-1 rounded-full text-xs font-bold inline-block">
+                    {{ item.safety_warning }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 6: MẪU 3 - BƯỚC 3 (TRƯỚC KHI ĂN) ==================== -->
+    <div v-show="currentTab === 'step3'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Theo Quyết định 1246/QĐ-BYT</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">MẪU SỐ 3: KIỂM TRA TRƯỚC KHI ĂN (BƯỚC 3)</h2>
+          <p class="text-xs text-slate-500">Kiểm tra thời gian chia món ăn xong, dụng cụ che đậy, nhiệt độ phục vụ và cảm quan trước khi ăn</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="printCurrent" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+            <span>🖨️</span>
+            <span>In Biểu Mẫu 3</span>
+          </button>
+          <button @click="saveDailyRecord" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
+            💾 Lưu Bước 3
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3 Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">TT</th>
+                <th class="w-20 text-center">Ca ăn</th>
+                <th>Tên món ăn</th>
+                <th class="w-20 text-center">Số suất</th>
+                <th class="w-28 text-center">Giờ chia xong</th>
+                <th>Thời gian ăn</th>
+                <th>Dụng cụ chứa đựng, che đậy</th>
+                <th class="text-center">Kiểm tra cảm quan</th>
+                <th>Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, idx) in (dailyData.step3 || [])" :key="idx">
+                <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                <td class="text-center">
+                  <span :class="{'bg-amber-100 text-amber-800': item.ca === 'TRƯA', 'bg-sky-100 text-sky-800': item.ca === 'CHIỀU', 'bg-indigo-100 text-indigo-800': item.ca === 'TỐI'}"
+                        class="px-2 py-0.5 rounded text-xs font-bold">
+                    {{ item.ca }}
+                  </span>
+                </td>
+                <td class="font-bold text-slate-900">{{ item.dish_name }}</td>
+                <td class="text-center font-bold text-slate-800">{{ item.portions }}</td>
+                <td class="text-center">
+                  <input type="text" v-model="item.dispense_time" class="w-20 text-center font-medium bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-xs">
+                </td>
+                <td class="text-xs font-semibold text-slate-700">{{ item.eating_time }}</td>
+                <td class="text-xs text-slate-600">
+                  <input type="text" v-model="item.container" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs">
+                </td>
+                <td class="text-center">
+                  <button @click="item.sensory_passed = !item.sensory_passed" 
+                          :class="item.sensory_passed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'"
+                          class="px-2.5 py-1 text-xs font-bold rounded-lg border transition">
+                    {{ item.sensory_passed ? '✓ Đạt' : '✕ KĐ' }}
+                  </button>
+                </td>
+                <td class="text-xs text-slate-400">Đạt yêu cầu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 7: MẪU 4 - NHÃN LƯU MẪU (TEM DÁN) ==================== -->
+    <div v-show="currentTab === 'labels'" class="space-y-6">
+      <div class="no-print bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-sky-600 tracking-wider">Quy chuẩn dán tem hũ Inox lưu mẫu</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">MẪU SỐ 4: IN NHÃN MẪU THỨC ĂN LƯU</h2>
+          <p class="text-xs text-slate-500">Mỗi tem dán trực tiếp lên hũ inox đựng mẫu thức ăn. Chuẩn kích thước in tem hoặc in A4.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+            <button @click="labelFilterCa = 'ALL'" :class="{'bg-white text-slate-900 shadow-sm': labelFilterCa === 'ALL'}" class="px-3 py-1.5 rounded-lg transition">Tất cả</button>
+            <button @click="labelFilterCa = 'TRƯA'" :class="{'bg-white text-amber-800 shadow-sm': labelFilterCa === 'TRƯA'}" class="px-3 py-1.5 rounded-lg transition">Trưa</button>
+            <button @click="labelFilterCa = 'CHIỀU'" :class="{'bg-white text-sky-800 shadow-sm': labelFilterCa === 'CHIỀU'}" class="px-3 py-1.5 rounded-lg transition">Chiều</button>
+            <button @click="labelFilterCa = 'TỐI'" :class="{'bg-white text-indigo-800 shadow-sm': labelFilterCa === 'TỐI'}" class="px-3 py-1.5 rounded-lg transition">Tối</button>
+          </div>
+          <button @click="printCurrent" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center gap-1.5">
+            <span>🖨️</span>
+            <span>In Tem Nhãn Ngay</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Labels Grid Preview -->
+      <div class="labels-print-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div v-for="(lbl, idx) in filteredLabels" :key="idx" class="sample-label card-shadow">
+          <div class="label-header">
+            <div class="label-title">NHÃN LƯU MẪU THỨC ĂN</div>
+            <div class="label-facility">{{ lbl.facility_name }}</div>
+          </div>
+          
+          <div class="dish-highlight truncate">
+            {{ lbl.dish_name }}
+          </div>
+
+          <div class="label-details">
+            <div class="flex justify-between">
+              <span>Bữa ăn: <b>{{ lbl.ca }}</b></span>
+              <span>Ngày: <b>{{ lbl.date }}</b></span>
+            </div>
+            <div class="flex justify-between mt-1">
+              <span>Giờ lấy mẫu: <b>{{ lbl.sample_time }}</b></span>
+              <span>Lượng: <b>{{ lbl.dish_name && (lbl.dish_name.toLowerCase().includes('canh') || lbl.dish_name.toLowerCase().includes('phở')) ? '150 ml' : '100 g' }}</b></span>
+            </div>
+            <div class="mt-1 text-[9px] text-slate-500 flex justify-between border-t border-slate-100 pt-1">
+              <span>Người lấy: <b>{{ lbl.sampler }}</b></span>
+              <span>Ký: _________</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 8: MẪU 5 - SỔ LƯU & HỦY MẪU ==================== -->
+    <div v-show="currentTab === 'sampling'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Theo Quyết định 1246/QĐ-BYT</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">MẪU SỐ 5: SỔ THEO DÕI LƯU VÀ HỦY MẪU THỨC ĂN</h2>
+          <p class="text-xs text-slate-500">Thời gian lưu mẫu tối thiểu đủ 24 giờ. Nhiệt độ bảo quản tủ lạnh lưu mẫu từ 2°C – 8°C</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="printCurrent" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+            <span>🖨️</span>
+            <span>In Sổ Mẫu 5</span>
+          </button>
+          <button @click="saveDailyRecord" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
+            💾 Lưu Mẫu 5
+          </button>
+        </div>
+      </div>
+
+      <!-- Sampling Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-10 text-center">TT</th>
+                <th class="w-20 text-center">Bữa ăn</th>
+                <th>Tên món ăn lưu</th>
+                <th class="text-center">Khối lượng mẫu</th>
+                <th class="text-center">Dụng cụ lưu</th>
+                <th class="text-center">Nhiệt độ</th>
+                <th>Thời gian lấy mẫu</th>
+                <th>Thời gian hủy mẫu (≥24h)</th>
+                <th class="text-center">Tình trạng khi hủy</th>
+                <th>Người lấy mẫu</th>
+                <th>Người hủy mẫu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, idx) in (dailyData.sampling || [])" :key="idx">
+                <td class="text-center font-semibold text-slate-500">{{ idx + 1 }}</td>
+                <td class="text-center">
+                  <span :class="{'bg-amber-100 text-amber-800': item.ca === 'TRƯA', 'bg-sky-100 text-sky-800': item.ca === 'CHIỀU', 'bg-indigo-100 text-indigo-800': item.ca === 'TỐI'}"
+                        class="px-2 py-0.5 rounded text-xs font-bold">
+                    {{ item.ca }}
+                  </span>
+                </td>
+                <td class="font-bold text-slate-900">{{ item.dish_name }}</td>
+                <td class="text-center font-bold text-slate-700">{{ item.sample_amount }}</td>
+                <td class="text-center text-xs text-slate-600">{{ item.container }}</td>
+                <td class="text-center font-semibold text-sky-700">{{ item.temperature }}</td>
+                <td class="text-xs font-semibold text-slate-800">{{ item.time_sampled }}</td>
+                <td class="text-xs font-semibold text-slate-800">{{ item.time_destroyed }}</td>
+                <td class="text-center">
+                  <span class="badge-ok px-2 py-0.5 rounded text-xs font-bold">
+                    {{ item.sample_condition_on_destroy }}
+                  </span>
+                </td>
+                <td class="text-xs font-bold text-slate-700">{{ item.sampler }}</td>
+                <td class="text-xs font-bold text-slate-700">{{ item.destroyer }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 9: AUDIT 24 CHECKLIST ==================== -->
+    <div v-show="currentTab === 'audit'" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Hệ Thống Rà Soát Tự Động</span>
+          <h2 class="text-lg font-bold text-slate-900 mt-0.5">24 TIÊU CHÍ KIỂM TRA TỰ ĐỘNG THEO QĐ 1246/QĐ-BYT</h2>
+          <p class="text-xs text-slate-500">Giúp kế toán, quản lý bếp và y tế kiểm tra mọi dòng trước khi in và ký sổ</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
+            ✓ Đạt: {{ auditData ? auditData.passed_count : 0 }}
+          </span>
+          <span class="px-3 py-1.5 bg-amber-100 text-amber-800 rounded-xl text-xs font-bold">
+            ⚠ Cảnh báo: {{ auditData ? auditData.warn_count : 0 }}
+          </span>
+          <span class="px-3 py-1.5 bg-rose-100 text-rose-800 rounded-xl text-xs font-bold">
+            ✕ Lỗi: {{ auditData ? auditData.error_count : 0 }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Checklist Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div v-for="item in (auditData && auditData.checklist ? auditData.checklist : [])" :key="item.id"
+             :class="{'border-emerald-200 bg-emerald-50/30': item.status === 'OK', 'border-amber-200 bg-amber-50/30': item.status === 'CẢNH BÁO' || item.status === 'KHUYẾN NGHỊ' || item.status === 'THÔNG TIN', 'border-rose-200 bg-rose-50/30': item.status === 'LỖI' || item.status === 'CHƯA NHẬP'}"
+             class="p-4 rounded-2xl border bg-white card-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">#{{ item.id }}</span>
+              <span :class="{'badge-ok': item.status === 'OK', 'badge-warn': item.status === 'CẢNH BÁO' || item.status === 'KHUYẾN NGHỊ' || item.status === 'THÔNG TIN', 'badge-error': item.status === 'LỖI' || item.status === 'CHƯA NHẬP'}"
+                    class="px-2 py-0.5 rounded-full text-[11px] font-extrabold uppercase">
+                {{ item.status }}
+              </span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 leading-snug">{{ item.title }}</h4>
+            <p class="text-xs font-semibold text-slate-600 mt-2 bg-white/70 p-2 rounded-lg border border-slate-100">
+              Số liệu: <span class="text-slate-900 font-bold">{{ item.value }}</span>
+            </p>
+          </div>
+          <div class="mt-3 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+            <span class="font-semibold text-slate-700">Hướng xử lý:</span> {{ item.action }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 10: SETTINGS & MASTER DATA ==================== -->
+    <div v-show="currentTab === 'settings'" class="space-y-6">
+      
+      <!-- Facility & Operational Settings -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="font-bold text-base text-slate-900">Cấu Hình Vận Hành Hệ Thống</h3>
+            <p class="text-xs text-slate-500">Thông tin cơ sở, nhân sự phụ trách và các tham số kiểm soát chuẩn Bộ Y Tế</p>
+          </div>
+          <button @click="saveConfig" class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition">
+            💾 Lưu Cấu Hình
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Tên cơ sở / bếp ăn</label>
+            <input type="text" v-model="config['Tên cơ sở']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Địa chỉ kiểm tra</label>
+            <input type="text" v-model="config['Địa chỉ / địa điểm kiểm tra']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Điện thoại</label>
+            <input type="text" v-model="config['Điện thoại']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Người kiểm tra / Lấy mẫu</label>
+            <input type="text" v-model="config['Người kiểm tra / lấy mẫu / lưu mẫu']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold text-emerald-800">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Người hủy mẫu (khuyến cáo khác người lưu)</label>
+            <input type="text" v-model="config['Người hủy mẫu']" placeholder="Trần Văn Hải..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold text-indigo-800">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Dung sai định lượng (± %)</label>
+            <input type="number" v-model="config['Dung sai định lượng cho phép (± %)']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold text-slate-900">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Nhiệt độ bảo quản mẫu</label>
+            <input type="text" v-model="config['Nhiệt độ bảo quản mẫu']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Khối lượng mẫu đặc (tối thiểu 100g)</label>
+            <input type="number" v-model="config['Khối lượng mẫu thức ăn đặc (g)']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Thể tích mẫu lỏng (tối thiểu 150ml)</label>
+            <input type="number" v-model="config['Thể tích mẫu thức ăn lỏng (ml)']" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-bold">
+          </div>
+        </div>
+      </div>
+
+      <!-- Dishes Master Data (251 dishes) -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="font-bold text-base text-slate-900">Danh Mục Món Ăn ({{ dishes.length }} món)</h3>
+            <p class="text-xs text-slate-500">Tra cứu nhanh món ăn, phân loại đặc/lỏng và nguyên liệu chính</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" v-model="dishSearchQuery" placeholder="🔍 Tìm kiếm món ăn..." 
+                   class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium w-64 focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+
+        <!-- Add New Dish Row -->
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 mb-4 flex flex-wrap items-center gap-3 text-xs">
+          <input type="text" v-model="newDish.name" placeholder="Tên món mới (VD: Bò lúc lắc)" class="flex-1 min-w-[180px] bg-white border border-slate-300 rounded-lg p-2 font-medium">
+          <input type="text" v-model="newDish.main_ingredient" placeholder="Nguyên liệu (Bò)" class="w-36 bg-white border border-slate-300 rounded-lg p-2">
+          <select v-model="newDish.sample_type" class="w-24 bg-white border border-slate-300 rounded-lg p-2 font-semibold">
+            <option value="Đặc">Đặc</option>
+            <option value="Lỏng">Lỏng</option>
+          </select>
+          <button @click="addDish" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition">
+            + Thêm Món
+          </button>
+        </div>
+
+        <!-- Dishes Table -->
+        <div class="max-h-96 overflow-y-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-12 text-center">STT</th>
+                <th>Tên món ăn</th>
+                <th>Nguyên liệu chính</th>
+                <th class="w-28 text-center">Loại mẫu</th>
+                <th class="w-24 text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(d, idx) in filteredDishes.slice(0, 100)" :key="d.id">
+                <td class="text-center font-semibold text-slate-400">{{ idx + 1 }}</td>
+                <td class="font-bold text-slate-800">{{ d.name }}</td>
+                <td class="text-xs text-slate-600">{{ d.main_ingredient }}</td>
+                <td class="text-center">
+                  <span :class="d.sample_type === 'Lỏng' ? 'bg-cyan-100 text-cyan-800' : 'bg-emerald-100 text-emerald-800'" class="px-2 py-0.5 rounded text-xs font-semibold">
+                    {{ d.sample_type }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button @click="deleteDish(d.id, d.name)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Suppliers Master Data -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        <div class="mb-4 border-b border-slate-100 pb-3">
+          <h3 class="font-bold text-base text-slate-900">Danh Mục Nhà Cung Cấp Thực Phẩm</h3>
+          <p class="text-xs text-slate-500">Tự động điền thông tin địa chỉ, SĐT và người giao hàng ở Bước 1</p>
+        </div>
+
+        <!-- Add Supplier Row -->
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 mb-4 flex flex-wrap items-center gap-3 text-xs">
+          <input type="text" v-model="newSupplier.name" placeholder="Tên nhà cung cấp" class="flex-1 min-w-[180px] bg-white border border-slate-300 rounded-lg p-2 font-medium">
+          <input type="text" v-model="newSupplier.address" placeholder="Địa chỉ" class="w-48 bg-white border border-slate-300 rounded-lg p-2">
+          <input type="text" v-model="newSupplier.phone" placeholder="Số điện thoại" class="w-32 bg-white border border-slate-300 rounded-lg p-2">
+          <input type="text" v-model="newSupplier.delivery_person" placeholder="Người giao hàng" class="w-36 bg-white border border-slate-300 rounded-lg p-2">
+          <button @click="saveSupplier" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition">
+            + Thêm NCC
+          </button>
+        </div>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left table-custom">
+            <thead>
+              <tr>
+                <th class="w-12 text-center">STT</th>
+                <th>Tên nhà cung cấp</th>
+                <th>Địa chỉ</th>
+                <th>Số điện thoại</th>
+                <th>Người giao hàng</th>
+                <th class="w-24 text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(s, idx) in suppliers" :key="s.id">
+                <td class="text-center font-semibold text-slate-400">{{ idx + 1 }}</td>
+                <td class="font-bold text-slate-900">{{ s.name }}</td>
+                <td class="text-xs text-slate-600">{{ s.address }}</td>
+                <td class="text-xs font-semibold text-slate-800">{{ s.phone }}</td>
+                <td class="text-xs text-slate-700">{{ s.delivery_person }}</td>
+                <td class="text-center">
+                  <button @click="deleteSupplier(s.id, s.name)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="no-print bg-white border-t border-slate-200 py-4 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+      <p>© 2026 Hệ thống Sổ Kiểm Thực 3 Bước & Lưu Mẫu Thức Ăn • Tân Hồ Tây</p>
+      <p class="font-medium text-slate-600">Chuẩn hóa theo Quyết định 1246/QĐ-BYT Bộ Y Tế</p>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Vue App Mounting Script -->
+<script src="/static/js/app.js"></script>
+</body>
+</html>

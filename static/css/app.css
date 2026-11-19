@@ -1,0 +1,191 @@
+/* Modern Dashboard & Print Stylesheet for Menu & Food Sampling Management */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #d1fae5;
+  --secondary: #3b82f6;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --dark: #1e293b;
+  --gray-bg: #f8fafc;
+  --border: #e2e8f0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--gray-bg);
+  color: #334155;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Card Style */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+}
+.card-shadow:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+/* Badge colors */
+.badge-ok {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+.badge-warn {
+  background-color: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+.badge-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Table Styles */
+.table-custom th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 10px 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+.table-custom td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+.table-custom tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Label sticker style (Mẫu 4) */
+.sample-label {
+  width: 72mm;
+  height: 48mm;
+  border: 2px dashed #0284c7;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  page-break-inside: avoid;
+  position: relative;
+}
+.sample-label .label-header {
+  border-bottom: 1px solid #bae6fd;
+  padding-bottom: 4px;
+  text-align: center;
+}
+.sample-label .label-title {
+  font-size: 11px;
+  font-weight: bold;
+  color: #0369a1;
+  text-transform: uppercase;
+}
+.sample-label .label-facility {
+  font-size: 9px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sample-label .dish-highlight {
+  font-size: 14px;
+  font-weight: bold;
+  color: #0f172a;
+  text-align: center;
+  margin: 4px 0;
+  background-color: #f0f9ff;
+  padding: 3px;
+  border-radius: 4px;
+}
+.sample-label .label-details {
+  font-size: 10px;
+  color: #334155;
+  line-height: 1.4;
+}
+
+/* PRINT MEDIA QUERIES (Chuẩn in ấn biểu mẫu Bộ Y Tế & Tem Nhãn) */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+  }
+  .no-print, header, nav, .navbar, .tab-nav, .action-bar, button, .modal, .toast {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Form table for print */
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 10px !important;
+  }
+  .print-table th, .print-table td {
+    border: 1px solid black !important;
+    padding: 4px 6px !important;
+    font-size: 10pt !important;
+    text-align: left;
+  }
+  .print-table th {
+    background-color: #f2f2f2 !important;
+    -webkit-print-color-adjust: exact;
+    text-align: center !important;
+  }
+
+  /* Grid labels in print */
+  .labels-print-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15mm !important;
+    padding: 10mm !important;
+  }
+  .sample-label {
+    border: 1.5px solid black !important;
+    width: 80mm !important;
+    height: 50mm !important;
+  }
+  
+  .page-break {
+    page-break-after: always;
+  }
+}

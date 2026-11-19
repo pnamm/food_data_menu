@@ -1,0 +1,3116 @@
+{
+  "config": {
+    "Tên cơ sở": "Công ty TNHH Thương mại Dịch vụ Tân Hồ Tây",
+    "Địa chỉ / địa điểm kiểm tra": "Thửa đất số 44, Tờ bản đồ số 11, Đường Hùng Vương, Tổ 12, Khu phố Rạch Bắp, Phường Tây Nam, Thành phố Hồ Chí Minh, Việt Nam",
+    "Điện thoại": "0913 144 74",
+    "Đơn giá/suất (đồng, chưa VAT)": "22.000 vnd ( chưa VAT)",
+    "II. NHÂN SỰ": "",
+    "Người kiểm tra / lấy mẫu / lưu mẫu": "NGUYỄN VĂN QUYỆN",
+    "Người hủy mẫu": "",
+    "Quản lý xác nhận": "",
+    "III. GIỜ ĂN & GIỜ LẤY MẪU THEO CA": "",
+    "CA": "Giờ bắt đầu ăn",
+    "TRƯA": "11:00:00",
+    "CHIỀU": "16:00:00",
+    "IV. LƯU MẪU THỨC ĂN (QĐ 1246/QĐ-BYT)": "",
+    "Dụng cụ chứa mẫu thức ăn lưu": "Hũ Inox",
+    "Nhiệt độ bảo quản mẫu": "5°C",
+    "Khối lượng mẫu thức ăn đặc (g)": "100",
+    "Thể tích mẫu thức ăn lỏng (ml)": "150",
+    "Thời gian lưu mẫu tối thiểu (giờ)": "24",
+    "V. KIỂM THỰC": "",
+    "Dụng cụ chia, chứa đựng, che đậy thức ăn (Bước 3)": "Inox",
+    "Thời gian tối đa từ nấu xong đến bắt đầu ăn (giờ)": "2",
+    "Dung sai định lượng cho phép (± %)": "5",
+    "CẤU HÌNH CA TỐI": "Giờ bắt đầu ăn"
+  },
+  "clients": [
+    "CÔNG TY TNHH EVERCRES VIỆT NAM",
+    "CÔNG TY TNHH THƯƠNG MẠI SẢN XUẤT TUYỀN HƯNG",
+    "CÔNG TY TNHH CÔNG NGHIỆP V",
+    "CÔNG TY TNHH GIÁO DỤC TÂM PHÚC KHANG",
+    "CÔNG TY TNHH CÔNG NGHIỆP LI LONG",
+    "CÔNG TY TNHH BẢO VỆ MÔI TRƯỜNG XICHENG (HCM)",
+    "CÔNG TY TNHH CÔNG NGHỆ CAO SU AN THÁI VIỆT NAM",
+    "CÔNG TY TNHH KIM LOẠI DAZHEN",
+    "CÔNG TY TNHH KIM LOẠI YUAN HONG VIỆT NAM",
+    "CÔNG TY TNHH YUAN DA YU",
+    "CÔNG TY TNHH MỘT THÀNH VIÊN MAY CÔNG NGHIỆP GELAN (VIỆT NAM)",
+    "CÔNG TY TNHH RTI ( Việt Nam)",
+    "CÔNG TY TNHH THÚY MỸ TƯ VIỆT NAM.",
+    "CÔNG TY TNHH SẢN XUẤT VALI EXO",
+    "Công ty TNHH TRIMMERS TU",
+    "CÔNG TY TNHH BAO BÌ VÀ THỰC PHẨM KORYEO",
+    "CÔNG TY TNHH NỘI THẤT HẰNG PHONG VIỆT NAM"
+  ],
+  "suppliers": [
+    {
+      "name": "Cty Đoàn Minh Tuấn",
+      "address": "Thới Hòa",
+      "phone": "",
+      "delivery_person": ""
+    },
+    {
+      "name": "CT Thái Lan Anh",
+      "address": "An Phú",
+      "phone": "",
+      "delivery_person": ""
+    }
+  ],
+  "dishes": [
+    {
+      "name": "Bí đỏ chiên giòn",
+      "main_ingredient": "Bí đỏ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bông cải trắng xào",
+      "main_ingredient": "Bông cải trắng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bông cải xanh xào",
+      "main_ingredient": "Bông cải xanh",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bầu",
+      "main_ingredient": "Bầu",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cải bẹ xanh",
+      "main_ingredient": "Cải bẹ xanh",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cải cúc (tần ô)",
+      "main_ingredient": "Cải cúc (tần ô)",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cải ngọt",
+      "main_ingredient": "Cải ngọt",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cải thìa",
+      "main_ingredient": "Cải thìa",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cải xanh",
+      "main_ingredient": "Cải xanh",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh mồng tơi",
+      "main_ingredient": "Mồng tơi",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau dền",
+      "main_ingredient": "Rau dền",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau má",
+      "main_ingredient": "Rau má",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau ngót",
+      "main_ingredient": "Rau ngót",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau đay",
+      "main_ingredient": "Rau đay",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh xà lách xoong",
+      "main_ingredient": "Xà lách xoong",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa chiên",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa rim cà chua",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa sốt cà chua",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả quế kho tiêu",
+      "main_ingredient": "Chả quế",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cà rốt chiên giòn",
+      "main_ingredient": "Cà rốt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá basa kho tiêu",
+      "main_ingredient": "Cá basa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá diêu hồng chiên",
+      "main_ingredient": "Cá Diêu Hồng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá kho tộ",
+      "main_ingredient": "Cá",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cánh gà ram mặn",
+      "main_ingredient": "Cánh gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải ngọt xào",
+      "main_ingredient": "Cải ngọt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải thìa xào",
+      "main_ingredient": "Cải thìa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải thảo xào",
+      "main_ingredient": "Cải thảo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Khoai tây chiên giòn chay",
+      "main_ingredient": "Khoai tây",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Mồng tơi xào",
+      "main_ingredient": "Mồng tơi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm bào ngư chiên giòn",
+      "main_ingredient": "Nấm bào ngư",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm hương chiên giòn",
+      "main_ingredient": "Nấm hương",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm rơm chiên giòn",
+      "main_ingredient": "Nấm rơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đông cô chiên bột",
+      "main_ingredient": "Nấm đông cô",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đùi gà chiên xù",
+      "main_ingredient": "Nấm đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau bina xào",
+      "main_ingredient": "Rau bina",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau củ thập cẩm chiên giòn",
+      "main_ingredient": "Rau củ thập cẩm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau dền xào",
+      "main_ingredient": "Rau dền",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau lang xào",
+      "main_ingredient": "Rau lang",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau muống xào",
+      "main_ingredient": "Rau muống",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Su su xào",
+      "main_ingredient": "Su su",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn heo ram mặn",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt bò kho",
+      "main_ingredient": "Thịt bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt gà kho gừng",
+      "main_ingredient": "Thịt gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo kho thơm",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo kho tàu",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt vịt kho sả",
+      "main_ingredient": "Thịt vịt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng chiên hành lá",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng cút rim mặn",
+      "main_ingredient": "Trứng cút",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng gà luộc",
+      "main_ingredient": "Trứng gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng rim hành tây",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng rim nước mắm",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Tôm rim thịt",
+      "main_ingredient": "Tôm, thịt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đùi gà kho sả ớt",
+      "main_ingredient": "Đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên giòn rim chay",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên hành lá",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho chao",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho cà chua",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho củ cải",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho gừng",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho nước dừa",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho nước tương",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho nấm",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho nấm đông cô",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho riềng",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho sả ớt",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho tiêu",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho tương hột",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ chiên",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ chiên mè",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ rim tiêu",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ sốt cà chua",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu que xào",
+      "main_ingredient": "Đậu que",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bò xào đậu que",
+      "main_ingredient": "Bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm kim châm xào",
+      "main_ingredient": "Nấm kim châm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sữa Chua",
+      "main_ingredient": "Sữa chua",
+      "sample_type": "Đặc",
+      "step1_group": "II",
+      "norm_group": ""
+    },
+    {
+      "name": "Nho Mỹ",
+      "main_ingredient": "Nho Mỹ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà kho sả ớt",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá diêu hồng sốt cà",
+      "main_ingredient": "Cá Diêu Hồng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Kho quẹt",
+      "main_ingredient": "Kho quẹt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Mắm Chưng",
+      "main_ingredient": "Mắm chưng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt bò xào nấm",
+      "main_ingredient": "Thịt bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Dưa hấu",
+      "main_ingredient": "Dưa hấu",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Ổi",
+      "main_ingredient": "Ổi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo kho tiêu",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà kho gừng",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá basa kho tộ",
+      "main_ingredient": "Cá basa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn heo ram",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt bò xào rau",
+      "main_ingredient": "Thịt bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Vịt kho sả",
+      "main_ingredient": "Thịt vịt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà chiên nước mắm",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn heo kho",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đùi gà kho",
+      "main_ingredient": "Đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá basa chiên",
+      "main_ingredient": "Cá basa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo xào sả",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá lóc kho",
+      "main_ingredient": "Cá lóc",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà rang gừng",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn non ram",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cánh gà ram",
+      "main_ingredient": "Cánh gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt kho tàu",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà kho sả",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm rơm xào",
+      "main_ingredient": "Nấm rơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ rim",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho sả",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ sốt cà",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho đông cô",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đùi gà xào",
+      "main_ingredient": "Nấm đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm rơm kho",
+      "main_ingredient": "Nấm rơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đông cô xào",
+      "main_ingredient": "Nấm đông cô",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ kho",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho tương",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm bào ngư xào",
+      "main_ingredient": "Nấm bào ngư",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng chiên",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm chiên giòn",
+      "main_ingredient": "Nấm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng cút rim",
+      "main_ingredient": "Trứng cút",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả quế kho",
+      "main_ingredient": "Chả quế",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên giòn",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm bào ngư chiên",
+      "main_ingredient": "Nấm bào ngư",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa sốt cà",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ rim",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm hương chiên",
+      "main_ingredient": "Nấm hương",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả quế chiên",
+      "main_ingredient": "Chả quế",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm chiên bột",
+      "main_ingredient": "Nấm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng ốp la",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả cá chiên",
+      "main_ingredient": "Chả cá",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm rơm chiên",
+      "main_ingredient": "Nấm rơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng rim hành",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa rim",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Khoai tây chiên",
+      "main_ingredient": "Khoai tây",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bí đỏ chiên",
+      "main_ingredient": "Bí đỏ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau muống xào tỏi",
+      "main_ingredient": "Rau muống",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bông cải xào",
+      "main_ingredient": "Bông cải",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua cá",
+      "main_ingredient": "Cá",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bí đỏ",
+      "main_ingredient": "Bí đỏ",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bí đao",
+      "main_ingredient": "Bí đao",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua",
+      "main_ingredient": "Canh chua",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh xương",
+      "main_ingredient": "Xương",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chuối",
+      "main_ingredient": "Chuối",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đu đủ",
+      "main_ingredient": "Đu đủ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nho",
+      "main_ingredient": "Nho",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Táo",
+      "main_ingredient": "Táo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Lê",
+      "main_ingredient": "Lê",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cam",
+      "main_ingredient": "Cam",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Quýt",
+      "main_ingredient": "Quýt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thơm",
+      "main_ingredient": "Thơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt ba chỉ kho",
+      "main_ingredient": "Thịt ba chỉ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà ta kho gừng",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá lóc kho nghệ",
+      "main_ingredient": "Cá lóc",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn non nướng",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bò lúc lắc",
+      "main_ingredient": "Thịt bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá hồi áp chảo",
+      "main_ingredient": "Cá hồi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà xào sả ớt",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo quay",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Tôm sú rang me",
+      "main_ingredient": "Tôm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Vịt om sấu",
+      "main_ingredient": "Thịt vịt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá thu kho",
+      "main_ingredient": "Cá thu",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà ủ muối",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn cây nướng",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đùi gà chiên",
+      "main_ingredient": "Đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá basa nướng",
+      "main_ingredient": "Cá basa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bò kho gân",
+      "main_ingredient": "Thịt bò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo giả cầy",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá kèo kho",
+      "main_ingredient": "Cá kèo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà kho nấm",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sườn sụn ram",
+      "main_ingredient": "Sườn heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cá chim kho",
+      "main_ingredient": "Cá chim",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cánh gà chiên nước mắm",
+      "main_ingredient": "Cánh gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt heo xào măng",
+      "main_ingredient": "Thịt heo",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Gà kho gừng sả",
+      "main_ingredient": "Gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ non kho",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ ky xào",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đùi gà kho",
+      "main_ingredient": "Nấm đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ nhồi",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ sốt tiêu",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ om nấm",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm bào ngư xào tỏi",
+      "main_ingredient": "Nấm bào ngư",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ chiên giòn",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ sốt cà chua",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm hương xào",
+      "main_ingredient": "Nấm hương",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ om",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho riềng sả",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ om dứa",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đùi gà chiên",
+      "main_ingredient": "Nấm đùi gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ sốt me",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho cà",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm rơm kho tiêu",
+      "main_ingredient": "Nấm rơm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ ram",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ kho nấm hương",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu phụ chiên sả",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng vịt lộn",
+      "main_ingredient": "Trứng vịt",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả cá thác lác",
+      "main_ingredient": "Chả cá",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên sả",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đông cô rim",
+      "main_ingredient": "Nấm đông cô",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng lòng đào",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả giò chiên",
+      "main_ingredient": "Chả giò",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ hấp",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng chiên thịt",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nem nướng",
+      "main_ingredient": "Nem",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ ky chiên",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm kim châm cuộn",
+      "main_ingredient": "Nấm kim châm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng cút lộn",
+      "main_ingredient": "Trứng cút",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả cốm",
+      "main_ingredient": "Chả cốm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm bào ngư nướng",
+      "main_ingredient": "Nấm bào ngư",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng ốp la thịt",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả tôm",
+      "main_ingredient": "Chả tôm",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ chiên sả ớt",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Nấm đông cô chiên",
+      "main_ingredient": "Nấm đông cô",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Trứng chiên hành tây",
+      "main_ingredient": "Trứng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Chả lụa hấp",
+      "main_ingredient": "Chả lụa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Khoai lang chiên",
+      "main_ingredient": "Khoai lang",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bông cải xanh xào tỏi",
+      "main_ingredient": "Bông cải xanh",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu cove xào",
+      "main_ingredient": "Đậu cove",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải bó xôi xào",
+      "main_ingredient": "Cải bó xôi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Su su xào tỏi",
+      "main_ingredient": "Su su",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Rau lang xào tỏi",
+      "main_ingredient": "Rau lang",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Mồng tơi xào tỏi",
+      "main_ingredient": "Mồng tơi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải cúc xào",
+      "main_ingredient": "Cải cúc",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cải thìa xào tỏi",
+      "main_ingredient": "Cải thìa",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh khổ qua",
+      "main_ingredient": "Khổ qua",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua tôm",
+      "main_ingredient": "Tôm",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bí xanh",
+      "main_ingredient": "Bí xanh",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau tập tàng",
+      "main_ingredient": "Rau tập tàng",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh gà lá giang",
+      "main_ingredient": "Gà",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh cua",
+      "main_ingredient": "Cua",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh nấm",
+      "main_ingredient": "Nấm",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh đậu hũ",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh mướp",
+      "main_ingredient": "Mướp",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh xương ninh",
+      "main_ingredient": "Xương",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh nấm đông cô",
+      "main_ingredient": "Nấm đông cô",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua cá lóc",
+      "main_ingredient": "Cá lóc",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bí đỏ thịt",
+      "main_ingredient": "Bí đỏ",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua chay",
+      "main_ingredient": "Canh chua",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh rau má thịt",
+      "main_ingredient": "Rau má",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh bầu tôm",
+      "main_ingredient": "Bầu",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh chua cá basa",
+      "main_ingredient": "Cá basa",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Canh gà lá é",
+      "main_ingredient": "Gà",
+      "sample_type": "Lỏng",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Xoài",
+      "main_ingredient": "Xoài",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Mãng cầu",
+      "main_ingredient": "Mãng cầu",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Dưa lưới",
+      "main_ingredient": "Dưa lưới",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Kiwi",
+      "main_ingredient": "Kiwi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Lựu",
+      "main_ingredient": "Lựu",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Vải",
+      "main_ingredient": "Vải",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Bưởi",
+      "main_ingredient": "Bưởi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Cam sành",
+      "main_ingredient": "Cam",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Mít",
+      "main_ingredient": "Mít",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Sầu riêng",
+      "main_ingredient": "Sầu riêng",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thanh long",
+      "main_ingredient": "Thanh long",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Ổi ruột hồng",
+      "main_ingredient": "Ổi",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Thịt gà lắc muối",
+      "main_ingredient": "Thịt gà",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Đậu hũ tứ xuyên",
+      "main_ingredient": "Đậu hũ",
+      "sample_type": "Đặc",
+      "step1_group": "I",
+      "norm_group": ""
+    },
+    {
+      "name": "Kqua Nhồi",
+      "main_ingredient": "Khổ Qua",
+      "sample_type": "",
+      "step1_group": "I",
+      "norm_group": ""
+    }
+  ],
+  "norms": [
+    {
+      "stt": 1,
+      "group": "Thịt heo (nạc, ba chỉ, cốt lết)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 80,
+      "max": 100,
+      "standard": 90
+    },
+    {
+      "stt": 2,
+      "group": "Sườn heo",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 3,
+      "group": "Thịt bò",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 70,
+      "max": 90,
+      "standard": 80
+    },
+    {
+      "stt": 4,
+      "group": "Thịt gà (có xương)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 5,
+      "group": "Thịt vịt (có xương)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 6,
+      "group": "Cá (nguyên con / khúc)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 7,
+      "group": "Tôm",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 80,
+      "max": 100,
+      "standard": 80
+    },
+    {
+      "stt": 8,
+      "group": "Mực, hải sản khác",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 80,
+      "max": 100,
+      "standard": 90
+    },
+    {
+      "stt": 9,
+      "group": "Ếch, lươn",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 10,
+      "group": "Trứng gà / vịt",
+      "unit": "quả",
+      "apply_to": "Món",
+      "min": 1,
+      "max": 2,
+      "standard": 1.5
+    },
+    {
+      "stt": 11,
+      "group": "Trứng cút",
+      "unit": "quả",
+      "apply_to": "Món",
+      "min": 5,
+      "max": 7,
+      "standard": 6
+    },
+    {
+      "stt": 12,
+      "group": "Đậu hũ / tàu hũ",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 100,
+      "max": 150,
+      "standard": 120
+    },
+    {
+      "stt": 13,
+      "group": "Chả, giò, nem, viên (chế biến sẵn)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 60,
+      "max": 80,
+      "standard": 70
+    },
+    {
+      "stt": 14,
+      "group": "Nấm",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 80,
+      "max": 120,
+      "standard": 100
+    },
+    {
+      "stt": 15,
+      "group": "Rau củ – món chính chay",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 120,
+      "max": 150,
+      "standard": 130
+    },
+    {
+      "stt": 16,
+      "group": "Món mặn khác (không nhận diện)",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 90,
+      "max": 110,
+      "standard": 100
+    },
+    {
+      "stt": 17,
+      "group": "Rau củ – món xào",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 100,
+      "max": 150,
+      "standard": 120
+    },
+    {
+      "stt": 18,
+      "group": "Rau củ – nấu canh",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 40,
+      "max": 60,
+      "standard": 50
+    },
+    {
+      "stt": 19,
+      "group": "Trái cây tráng miệng",
+      "unit": "g",
+      "apply_to": "Món",
+      "min": 100,
+      "max": 150,
+      "standard": 120
+    },
+    {
+      "stt": 20,
+      "group": "Sữa chua, tráng miệng đóng hộp",
+      "unit": "hộp",
+      "apply_to": "Món",
+      "min": 1,
+      "max": 1,
+      "standard": 1
+    },
+    {
+      "stt": 21,
+      "group": "Món nước (nước uống, chè…)",
+      "unit": "ml",
+      "apply_to": "Món",
+      "min": 150,
+      "max": 250,
+      "standard": 200
+    },
+    {
+      "stt": 1,
+      "group": "Gạo",
+      "unit": "g",
+      "apply_to": "Tổng suất",
+      "min": 150,
+      "max": 200,
+      "standard": 167
+    },
+    {
+      "stt": 2,
+      "group": "Dầu ăn",
+      "unit": "ml",
+      "apply_to": "Tổng suất",
+      "min": 10,
+      "max": 15,
+      "standard": 12
+    },
+    {
+      "stt": 3,
+      "group": "Nước mắm",
+      "unit": "ml",
+      "apply_to": "Tổng suất",
+      "min": 5,
+      "max": 8,
+      "standard": 6
+    },
+    {
+      "stt": 4,
+      "group": "Đường",
+      "unit": "g",
+      "apply_to": "Tổng suất",
+      "min": 3,
+      "max": 6,
+      "standard": 5
+    }
+  ],
+  "soup_recipes": [
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Hủ tiếu sợi tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Thịt heo nạc",
+      "category": "Đạm",
+      "norm": 50,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Thái lát"
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Xương heo",
+      "category": "Nước dùng",
+      "norm": 80,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Tôm",
+      "category": "Đạm",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Còn vỏ"
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Củ cải trắng",
+      "category": "Nước dùng",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Giá đỗ",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 5,
+      "note": ""
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Hẹ",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Hủ Tiếu",
+      "ingredient": "Hành tím, tỏi (phi)",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Bánh phở tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Thịt bò",
+      "category": "Đạm",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Tái/chín"
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Xương bò",
+      "category": "Nước dùng",
+      "norm": 100,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Hành tây",
+      "category": "Rau",
+      "norm": 15,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Gừng",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": "Nướng thơm"
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Gia vị phở (quế, hồi, thảo quả)",
+      "category": "Gia vị",
+      "norm": 1,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Giá đỗ",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 5,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Rau quế, ngò gai",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 15,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Bò",
+      "ingredient": "Chanh, ớt",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Bún tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Cua xay (riêu cua)",
+      "category": "Đạm",
+      "norm": 40,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Trứng gà",
+      "category": "Đạm",
+      "norm": 0.3,
+      "unit": "quả",
+      "waste_rate": 0,
+      "note": "Đánh riêu"
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Đậu hũ",
+      "category": "Đạm",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Chiên"
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Huyết heo",
+      "category": "Đạm",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Xương heo",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Cà chua",
+      "category": "Rau",
+      "norm": 40,
+      "unit": "g",
+      "waste_rate": 5,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Mắm tôm",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "ml",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Rau sống, giá",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Riêu",
+      "ingredient": "Hành lá",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Thịt bò nạm",
+      "category": "Đạm",
+      "norm": 100,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Cà rốt",
+      "category": "Rau",
+      "norm": 40,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Sả",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 15,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Hành tím, tỏi",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Gia vị bò kho (gói)",
+      "category": "Gia vị",
+      "norm": 2,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Nước dừa tươi",
+      "category": "Nước dùng",
+      "norm": 50,
+      "unit": "ml",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Bánh mì",
+      "category": "Tinh bột",
+      "norm": 1,
+      "unit": "ổ",
+      "waste_rate": 0,
+      "note": "Hoặc thay bằng hủ tiếu/bún 150 g"
+    },
+    {
+      "dish": "Bò Kho",
+      "ingredient": "Rau quế",
+      "category": "Rau",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 15,
+      "note": ""
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Mì trứng tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Thịt heo nạc (xá xíu)",
+      "category": "Đạm",
+      "norm": 50,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Tôm",
+      "category": "Đạm",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Còn vỏ"
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Xương heo",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Cải ngọt / cải thìa",
+      "category": "Rau",
+      "norm": 40,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Mì Trứng",
+      "ingredient": "Hành phi",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Bánh canh tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Giò heo",
+      "category": "Đạm",
+      "norm": 80,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Có xương"
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Chả cá",
+      "category": "Đạm",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Xương heo",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Hành phi",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bánh Canh",
+      "ingredient": "Chanh, ớt",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Bún tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Mọc (giò sống)",
+      "category": "Đạm",
+      "norm": 50,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Sườn non / xương heo",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Nấm mèo",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Khô"
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Măng tươi",
+      "category": "Rau",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Rau sống, giá",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Mọc",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Bún tươi (sợi to)",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Theo E3 (tô/kg)"
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Bắp bò",
+      "category": "Đạm",
+      "norm": 50,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Thái lát"
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Giò heo",
+      "category": "Đạm",
+      "norm": 50,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Có xương"
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Chả Huế / chả cua",
+      "category": "Đạm",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Xương bò / xương heo",
+      "category": "Nước dùng",
+      "norm": 80,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Sả",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 15,
+      "note": ""
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Mắm ruốc",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Rau sống, giá",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Bò",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Bánh phở tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Theo E3 (tô/kg)"
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Thịt gà",
+      "category": "Đạm",
+      "norm": 70,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Xé/thái"
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Xương gà",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Hành tây",
+      "category": "Rau",
+      "norm": 15,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Gừng",
+      "category": "Gia vị",
+      "norm": 3,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": "Nướng thơm"
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Gia vị phở (quế, hồi, thảo quả)",
+      "category": "Gia vị",
+      "norm": 1,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Giá đỗ",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 5,
+      "note": ""
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Hành lá, ngò",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Phở Gà",
+      "ingredient": "Chanh, ớt, lá chanh",
+      "category": "Gia vị",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Bún tươi",
+      "category": "Tinh bột",
+      "norm": 166.66666666666666,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Theo E3 (tô/kg)"
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Cá lóc phi lê",
+      "category": "Đạm",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Chiên/luộc"
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Chả cá",
+      "category": "Đạm",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": ""
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Xương heo",
+      "category": "Nước dùng",
+      "norm": 60,
+      "unit": "g",
+      "waste_rate": 0,
+      "note": "Hầm nước dùng"
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Cà chua",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 5,
+      "note": ""
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Thơm (dứa)",
+      "category": "Rau",
+      "norm": 20,
+      "unit": "g",
+      "waste_rate": 15,
+      "note": ""
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Rau sống, giá",
+      "category": "Rau",
+      "norm": 30,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    },
+    {
+      "dish": "Bún Cá",
+      "ingredient": "Hành lá, thì là",
+      "category": "Rau",
+      "norm": 5,
+      "unit": "g",
+      "waste_rate": 10,
+      "note": ""
+    }
+  ],
+  "weekly_menu": {
+    "Thứ 2": {
+      "lunch": {
+        "main": "Cá Lóc Kho Nghệ",
+        "sub": "Thịt Xào Bông Cải",
+        "stir": "Cải Ngọt",
+        "soup": "Canh Chua",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null,
+        "soup_dish": "Phở Gà"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Sườn Dừa Rim Tiêu",
+        "sub": "Đậu Hũ Xào Rau Củ",
+        "stir": "Cải Ngọt",
+        "soup": "Chua"
+      },
+      "vegetarian_afternoon": {
+        "main": "Mắm Thái",
+        "sub": "Nấm Xào Thập Cẩm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má"
+      }
+    },
+    "Thứ 3": {
+      "lunch": {
+        "main": "Thịt Kho Măng",
+        "sub": "Cá Mèo Chiên",
+        "stir": "Đu Đủ",
+        "soup": "Cải Thảo",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Tôm Rim Thơm",
+        "sub": "Chả Cá Cháy Tỏi",
+        "stir": "Rau Muống",
+        "soup": "Bầu",
+        "dessert": null,
+        "soup_dish": "Hủ Tiếu"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Đậu Phộng Rang Tỏi",
+        "sub": "Chả Lụa Kho Măng",
+        "stir": "Đu Đủ",
+        "soup": "Cải Thảo"
+      },
+      "vegetarian_afternoon": {
+        "main": "Bóng Cá Ram Mè",
+        "sub": "Nấm Kim Châm Xào Bí Xanh",
+        "stir": "Rau Muống",
+        "soup": "Bầu"
+      }
+    },
+    "Thứ 4": {
+      "lunch": {
+        "main": "Gà Chiên Mắm",
+        "sub": "Mực Xào Sa Tế",
+        "stir": "Bắp Cải",
+        "soup": "Cải Xanh",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Cốt Lết Ram Mè",
+        "sub": "Cốt Lết Ram Mè",
+        "stir": "Dưa Leo",
+        "soup": "Soup",
+        "dessert": null,
+        "soup_dish": "Bún Riêu"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Đậu Hũ Kho Xả Nghệ",
+        "sub": "Măng Tươi Xào",
+        "stir": "Bắp Cải",
+        "soup": "Cải Xanh"
+      },
+      "vegetarian_afternoon": {
+        "main": "Heo Quay Ram Xả",
+        "sub": "Gà Lát Nấm Kho Rau Củ",
+        "stir": "Dưa Leo",
+        "soup": "Soup"
+      }
+    },
+    "Thứ 5": {
+      "lunch": {
+        "main": "Cá Nục Kho Thơm",
+        "sub": "Bò Xào Hành Cần",
+        "stir": "Rau Muống",
+        "soup": "Bí Đỏ",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Vịt Ram Xả Ớt",
+        "sub": "Bầu Xào Tép",
+        "stir": "Cà Tím",
+        "soup": "Cải Dún",
+        "dessert": null,
+        "soup_dish": "Bánh Canh"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Nấm Kho Bí Xanh",
+        "sub": "Sườn Chiên Chao",
+        "stir": "Rau Muống",
+        "soup": "Bí Đỏ"
+      },
+      "vegetarian_afternoon": {
+        "main": "Ruột Heo Khìa",
+        "sub": "Đậu Hũ Xào Đậu Que",
+        "stir": "Cà Tím",
+        "soup": "Cải Dún"
+      }
+    },
+    "Thứ 6": {
+      "lunch": {
+        "main": "Tôm Rang Thịt",
+        "sub": "Kqua Xào Trứng",
+        "stir": "Cải Thìa",
+        "soup": "Chua",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Cá Lóc Chiên Lắc Muối",
+        "sub": "Thịt Xào Susu",
+        "stir": "Đậu Bắp",
+        "soup": "Rau Má",
+        "dessert": null,
+        "soup_dish": "BÚN CÁ"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Đậu Hũ Kho Măng",
+        "sub": "Kqua Kho Nấm",
+        "stir": "Cải Thìa",
+        "soup": "Chua"
+      },
+      "vegetarian_afternoon": {
+        "main": "Sườn Chua Ngọt",
+        "sub": "Nấm Xào Thập Cẩm",
+        "stir": "Đậu Bắp",
+        "soup": "Rau Má"
+      }
+    },
+    "Thứ 7": {
+      "lunch": {
+        "main": "Ếch Kho Xả Nghệ",
+        "sub": "Trứng Luộc",
+        "stir": "Bầu",
+        "soup": "Tơi Mướp",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": "Thịt Kho Tiêu",
+        "sub": "Đậu Hũ Sốt Cà",
+        "stir": "Cải Thảo",
+        "soup": "Bầu",
+        "dessert": null,
+        "soup_dish": "Bún Bò"
+      },
+      "dinner": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": "Nui Xào",
+        "sub": "Đậu Hũ Chiên Giòn",
+        "stir": "Chả Giò",
+        "soup": "Tơi Mướp"
+      },
+      "vegetarian_afternoon": {
+        "main": "Bò Lát Xào Xả Ớt",
+        "sub": "Rau Củ Kho Tương Hột",
+        "stir": "Cải Thảo",
+        "soup": "Bầu"
+      }
+    },
+    "Chủ nhật": {
+      "lunch": {
+        "main": "Gà Kho Gừng",
+        "sub": "Cá Cơm",
+        "stir": "Bí Xanh",
+        "soup": "Rau Má",
+        "dessert": null
+      },
+      "afternoon": {
+        "main": null,
+        "sub": null,
+        "stir": null,
+        "soup": null,
+        "dessert": null,
+        "soup_dish": null
+      },
+      "dinner": {
+        "main": null,
+        "sub": null,
+        "stir": null,
+        "soup": null,
+        "dessert": null
+      },
+      "vegetarian_lunch": {
+        "main": null,
+        "sub": null,
+        "stir": null,
+        "soup": null
+      },
+      "vegetarian_afternoon": {
+        "main": null,
+        "sub": null,
+        "stir": null,
+        "soup": null
+      }
+    }
+  },
+  "portions": {
+    "Thứ 2": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 100,
+      "has_dinner": true,
+      "afternoon_soup": 120
+    },
+    "Thứ 3": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 100,
+      "has_dinner": true,
+      "afternoon_soup": 80
+    },
+    "Thứ 4": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 150,
+      "has_dinner": true,
+      "afternoon_soup": 100
+    },
+    "Thứ 5": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 100,
+      "has_dinner": true,
+      "afternoon_soup": 120
+    },
+    "Thứ 6": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 100,
+      "has_dinner": true,
+      "afternoon_soup": 100
+    },
+    "Thứ 7": {
+      "overtime": true,
+      "lunch": 300,
+      "dinner": 200,
+      "afternoon": 50,
+      "has_dinner": true,
+      "afternoon_soup": 100
+    },
+    "Chủ nhật": {
+      "overtime": true,
+      "lunch": 0,
+      "dinner": 0,
+      "afternoon": 0,
+      "has_dinner": false,
+      "afternoon_soup": 0
+    }
+  }
+}

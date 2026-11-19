@@ -1,0 +1,490 @@
+const { createApp, ref, computed, onMounted, watch } = Vue;
+
+const createEmptyWeeklyMenu = () => {
+  const res = {};
+  const days = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
+  for (const d of days) {
+    res[d] = {
+      lunch: { main: "", sub: "", stir: "", soup: "", dessert: "" },
+      afternoon: { main: "", sub: "", stir: "", soup: "", dessert: "", soup_dish: "" },
+      dinner: { main: "", sub: "", stir: "", soup: "", dessert: "" },
+      vegetarian_lunch: { main: "", sub: "", stir: "", soup: "" },
+      vegetarian_afternoon: { main: "", sub: "", stir: "", soup: "" }
+    };
+  }
+  return res;
+};
+
+createApp({
+  setup() {
+    // Current date selection
+    const selectedDate = ref("2026-11-02");
+    const currentTab = ref("dashboard");
+    const isLoading = ref(false);
+    const toast = ref({ show: false, message: "", type: "success" });
+
+    // Core Data
+    const config = ref({
+      "Tên cơ sở": "Công ty TNHH Thương mại Dịch vụ Tân Hồ Tây",
+      "Địa chỉ / địa điểm kiểm tra": "Thửa đất số 44, Tờ bản đồ số 11, Đường Hùng Vương, Tổ 12, Khu phố Rạch Bắp, Phường Tây Nam, Thành phố Hồ Chí Minh, Việt Nam",
+      "Điện thoại": "0913 144 74",
+      "Người kiểm tra / lấy mẫu / lưu mẫu": "NGUYỄN VĂN QUYỆN",
+      "Người hủy mẫu": "TRẦN VĂN HẢI",
+      "Nhiệt độ bảo quản mẫu": "5°C",
+      "Khối lượng mẫu thức ăn đặc (g)": "100",
+      "Thể tích mẫu thức ăn lỏng (ml)": "150",
+      "Thời gian lưu mẫu tối thiểu (giờ)": "24",
+      "Dung sai định lượng cho phép (± %)": "5"
+    });
+
+    const dailyData = ref({
+      is_saved: false,
+      estimations: [],
+      step1: [],
+      step2: [],
+      step3: [],
+      sampling: [],
+      labels: []
+    });
+
+    const portions = ref({
+      lunch_portions: 300,
+      afternoon_portions: 100,
+      dinner_portions: 200,
+      afternoon_soup_portions: 100,
+      has_overtime: true,
+      has_dinner: true
+    });
+
+    const weeklyMenu = ref(createEmptyWeeklyMenu());
+    const weekStartDate = ref("2026-11-02");
+    const dishes = ref([]);
+    const suppliers = ref([]);
+    const norms = ref([]);
+    const auditData = ref({
+      passed_count: 24,
+      warn_count: 0,
+      error_count: 0,
+      checklist: []
+    });
+    const historyList = ref([]);
+
+    // UI state for search/modals
+    const dishSearchQuery = ref("");
+    const newDish = ref({ name: "", main_ingredient: "", sample_type: "Đặc", step1_group: "I", norm_group: "" });
+    const newSupplier = ref({ name: "", address: "", phone: "", delivery_person: "" });
+    const labelFilterCa = ref("ALL");
+
+    // Days list
+    const daysOfWeek = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
+
+    const showToast = (message, type = "success") => {
+      toast.value = { show: true, message, type };
+      setTimeout(() => { toast.value.show = false; }, 3500);
+    };
+
+    // Calculate day name
+    const currentDayName = computed(() => {
+      if (!selectedDate.value) return "Thứ 2";
+      const d = new Date(selectedDate.value);
+      const dayIndex = (d.getDay() + 6) % 7; // Monday = 0
+      return daysOfWeek[dayIndex] || "Thứ 2";
+    });
+
+    // Filtered dishes
+    const filteredDishes = computed(() => {
+      if (!dishSearchQuery.value) return dishes.value;
+      const q = dishSearchQuery.value.toLowerCase();
+      return dishes.value.filter(d => d.name.toLowerCase().includes(q) || (d.main_ingredient && d.main_ingredient.toLowerCase().includes(q)));
+    });
+
+    // Total Portions
+    const totalDayPortions = computed(() => {
+      const l = parseInt(portions.value.lunch_portions || 0);
+      const a = portions.value.has_overtime ? parseInt(portions.value.afternoon_portions || 0) : 0;
+      const d = portions.value.has_dinner ? parseInt(portions.value.dinner_portions || 0) : 0;
+      return l + a + d;
+    });
+
+    // Filtered labels (Mẫu 4)
+    const filteredLabels = computed(() => {
+      if (!dailyData.value.labels) return [];
+      if (labelFilterCa.value === "ALL") return dailyData.value.labels;
+      return dailyData.value.labels.filter(l => l.ca === labelFilterCa.value);
+    });
+
+    // --- API Calls ---
+
+    const loadConfig = async () => {
+      try {
+        const res = await fetch("/api/config");
+        if (res.ok) {
+          const data = await res.json();
+          config.value = { ...config.value, ...data };
+        }
+      } catch (err) {
+        console.error("Lỗi tải cấu hình:", err);
+      }
+    };
+
+    const loadDishes = async () => {
+      try {
+        const res = await fetch("/api/dishes");
+        if (res.ok) dishes.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải món:", err);
+      }
+    };
+
+    const loadSuppliers = async () => {
+      try {
+        const res = await fetch("/api/suppliers");
+        if (res.ok) suppliers.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải NCC:", err);
+      }
+    };
+
+    const loadNorms = async () => {
+      try {
+        const res = await fetch("/api/norms");
+        if (res.ok) norms.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải định mức:", err);
+      }
+    };
+
+    const loadWeeklyMenu = async (weekStart) => {
+      try {
+        const url = weekStart ? `/api/menu/week?week_start=${weekStart}` : "/api/menu/week";
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          const base = createEmptyWeeklyMenu();
+          if (data.menu) {
+            for (const d of daysOfWeek) {
+              if (data.menu[d]) {
+                base[d] = {
+                  lunch: { ...base[d].lunch, ...data.menu[d].lunch },
+                  afternoon: { ...base[d].afternoon, ...data.menu[d].afternoon },
+                  dinner: { ...base[d].dinner, ...data.menu[d].dinner },
+                  vegetarian_lunch: { ...base[d].vegetarian_lunch, ...data.menu[d].vegetarian_lunch },
+                  vegetarian_afternoon: { ...base[d].vegetarian_afternoon, ...data.menu[d].vegetarian_afternoon }
+                };
+              }
+            }
+          }
+          weeklyMenu.value = base;
+          if (data.week_start) weekStartDate.value = data.week_start;
+        }
+      } catch (err) {
+        console.error("Lỗi tải thực đơn tuần:", err);
+      }
+    };
+
+    const loadPortions = async (date) => {
+      try {
+        const res = await fetch(`/api/portions/${date}`);
+        if (res.ok) {
+          const data = await res.json();
+          portions.value = {
+            ...data,
+            has_overtime: Boolean(data.has_overtime),
+            has_dinner: Boolean(data.has_dinner)
+          };
+        }
+      } catch (err) {
+        console.error("Lỗi tải suất ăn:", err);
+      }
+    };
+
+    const loadDailyRecord = async (date) => {
+      isLoading.value = true;
+      try {
+        await loadPortions(date);
+        const res = await fetch(`/api/daily/${date}`);
+        if (res.ok) {
+          const data = await res.json();
+          dailyData.value = {
+            is_saved: data.is_saved || false,
+            estimations: data.estimations || [],
+            step1: data.step1 || [],
+            step2: data.step2 || [],
+            step3: data.step3 || [],
+            sampling: data.sampling || [],
+            labels: data.labels || []
+          };
+        }
+        await runAudit(date);
+      } catch (err) {
+        console.error("Không thể tải dữ liệu ngày:", err);
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const runAudit = async (date) => {
+      try {
+        const res = await fetch(`/api/audit/${date}`);
+        if (res.ok) {
+          auditData.value = await res.json();
+        }
+      } catch (err) {
+        console.error("Lỗi kiểm tra an toàn:", err);
+      }
+    };
+
+    const loadHistory = async () => {
+      try {
+        const res = await fetch("/api/history");
+        if (res.ok) historyList.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải lịch sử:", err);
+      }
+    };
+
+    // --- Actions ---
+
+    const changeDate = (days) => {
+      const d = new Date(selectedDate.value);
+      d.setDate(d.getDate() + days);
+      selectedDate.value = d.toISOString().split("T")[0];
+    };
+
+    const triggerAutoFill = async () => {
+      isLoading.value = true;
+      try {
+        const res = await fetch(`/api/daily/${selectedDate.value}/autofill`, { method: "POST" });
+        if (res.ok) {
+          const data = await res.json();
+          dailyData.value = {
+            is_saved: true,
+            estimations: data.estimations || [],
+            step1: data.step1 || [],
+            step2: data.step2 || [],
+            step3: data.step3 || [],
+            sampling: data.sampling || [],
+            labels: data.labels || []
+          };
+          await runAudit(selectedDate.value);
+          await loadHistory();
+          showToast("✨ Đã tự động sinh đầy đủ hồ sơ ngày chuẩn quy chuẩn!", "success");
+        }
+      } catch (err) {
+        showToast("Lỗi khi tự động điền: " + err.message, "danger");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const saveDailyRecord = async () => {
+      isLoading.value = true;
+      try {
+        // Save portions first
+        await fetch(`/api/portions/${selectedDate.value}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(portions.value)
+        });
+
+        // Save daily record
+        const res = await fetch(`/api/daily/${selectedDate.value}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dailyData.value)
+        });
+        if (res.ok) {
+          const result = await res.json();
+          dailyData.value.is_saved = true;
+          await runAudit(selectedDate.value);
+          await loadHistory();
+          showToast(result.message || "Đã lưu hồ sơ thành công!", "success");
+        }
+      } catch (err) {
+        showToast("Lỗi lưu hồ sơ: " + err.message, "danger");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const saveWeeklyMenu = async () => {
+      isLoading.value = true;
+      try {
+        const res = await fetch("/api/menu/week", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            week_start: weekStartDate.value,
+            menu: weeklyMenu.value
+          })
+        });
+        if (res.ok) {
+          const result = await res.json();
+          showToast(result.message || "Đã lưu thực đơn tuần thành công!", "success");
+          await loadDailyRecord(selectedDate.value);
+        }
+      } catch (err) {
+        showToast("Lỗi lưu thực đơn: " + err.message, "danger");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const saveConfig = async () => {
+      try {
+        const res = await fetch("/api/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(config.value)
+        });
+        if (res.ok) {
+          const result = await res.json();
+          showToast(result.message || "Đã lưu cấu hình", "success");
+        }
+      } catch (err) {
+        showToast("Lỗi: " + err.message, "danger");
+      }
+    };
+
+    const updateActualReceived = (item, val) => {
+      const num = parseFloat(val) || 0;
+      item.actual_received = num;
+      if (item.need_amount > 0) {
+        const diff = (num - item.need_amount) / item.need_amount;
+        item.diff_percent = Math.round(diff * 1000) / 10;
+        const tolerance = parseFloat(config.value["Dung sai định lượng cho phép (± %)"] || 5);
+        if (Math.abs(item.diff_percent) <= tolerance) {
+          item.evaluation = "✓ Trong dung sai";
+        } else {
+          item.evaluation = diff > 0 ? `⚠ Thừa ${Math.abs(item.diff_percent)}%` : `⚠ Thiếu ${Math.abs(item.diff_percent)}%`;
+        }
+      }
+    };
+
+    const exportExcel = () => {
+      window.open(`/api/export-excel/${selectedDate.value}`, "_blank");
+    };
+
+    const printCurrent = () => {
+      window.print();
+    };
+
+    // Dish CRUD
+    const addDish = async () => {
+      if (!newDish.value.name.trim()) return;
+      try {
+        const res = await fetch("/api/dishes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newDish.value)
+        });
+        if (res.ok) {
+          showToast(`Đã thêm món "${newDish.value.name}"`);
+          newDish.value = { name: "", main_ingredient: "", sample_type: "Đặc", step1_group: "I", norm_group: "" };
+          await loadDishes();
+        }
+      } catch (err) {
+        showToast("Lỗi thêm món: " + err.message, "danger");
+      }
+    };
+
+    const deleteDish = async (id, name) => {
+      if (!confirm(`Bạn có chắc muốn xóa món "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/dishes/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast(`Đã xóa món "${name}"`);
+          await loadDishes();
+        }
+      } catch (err) {
+        showToast("Lỗi xóa: " + err.message, "danger");
+      }
+    };
+
+    // Supplier CRUD
+    const saveSupplier = async () => {
+      if (!newSupplier.value.name.trim()) return;
+      try {
+        const res = await fetch("/api/suppliers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newSupplier.value)
+        });
+        if (res.ok) {
+          showToast(`Đã lưu nhà cung cấp`);
+          newSupplier.value = { name: "", address: "", phone: "", delivery_person: "" };
+          await loadSuppliers();
+        }
+      } catch (err) {
+        showToast("Lỗi: " + err.message, "danger");
+      }
+    };
+
+    const deleteSupplier = async (id, name) => {
+      if (!confirm(`Bạn có chắc muốn xóa nhà cung cấp "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/suppliers/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast(`Đã xóa nhà cung cấp`);
+          await loadSuppliers();
+        }
+      } catch (err) {
+        showToast("Lỗi: " + err.message, "danger");
+      }
+    };
+
+    // Watch date change
+    watch(selectedDate, (newDate) => {
+      loadDailyRecord(newDate);
+    });
+
+    onMounted(async () => {
+      await loadConfig();
+      await loadDishes();
+      await loadSuppliers();
+      await loadNorms();
+      await loadWeeklyMenu();
+      await loadDailyRecord(selectedDate.value);
+      await loadHistory();
+    });
+
+    return {
+      selectedDate,
+      currentTab,
+      isLoading,
+      toast,
+      config,
+      dailyData,
+      portions,
+      weeklyMenu,
+      weekStartDate,
+      dishes,
+      suppliers,
+      norms,
+      auditData,
+      historyList,
+      daysOfWeek,
+      currentDayName,
+      totalDayPortions,
+      dishSearchQuery,
+      filteredDishes,
+      newDish,
+      newSupplier,
+      labelFilterCa,
+      filteredLabels,
+      changeDate,
+      triggerAutoFill,
+      saveDailyRecord,
+      saveWeeklyMenu,
+      saveConfig,
+      updateActualReceived,
+      exportExcel,
+      printCurrent,
+      addDish,
+      deleteDish,
+      saveSupplier,
+      deleteSupplier,
+      loadDailyRecord
+    };
+  }
+}).mount("#app");
