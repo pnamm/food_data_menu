@@ -254,54 +254,35 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
     dinner_ss = portions_info.get("dinner", 200) if has_dinner else 0
     soup_ss = portions_info.get("afternoon_soup", 100) if has_overtime else 0
 
-    # Build dishes list in the day
+    dish_slots = (
+        ("main", "main"), ("sub", "sub"), ("sub2", "sub"),
+        ("stir", "stir"), ("soup", "soup"), ("dessert", "dessert"),
+    )
     dishes_in_day = []
-    
-    # TRƯA
-    for role, key in [("main", "main"), ("sub", "sub"), ("stir", "stir"), ("soup", "soup"), ("dessert", "dessert")]:
-        dish = day_menu.get("lunch", {}).get(key)
-        if dish and lunch_ss > 0:
-            dishes_in_day.append({
-                "ca": "TRƯA",
-                "dish_name": dish,
-                "role": role,
-                "portions": lunch_ss
-            })
+    for meal, ca, portions in (
+        ("lunch", "TRƯA", lunch_ss),
+        ("afternoon", "CHIỀU", afternoon_ss),
+        ("dinner", "TỐI", dinner_ss),
+    ):
+        meal_dishes = day_menu.get(meal, {})
+        if portions > 0:
+            for key, role in dish_slots:
+                dish = (meal_dishes.get(key) or "").strip()
+                if dish:
+                    dishes_in_day.append({
+                        "ca": ca, "dish_name": dish, "role": role, "portions": portions
+                    })
 
-    # CHIỀU
-    if has_overtime and afternoon_ss > 0:
-        for role, key in [("main", "main"), ("sub", "sub"), ("stir", "stir"), ("soup", "soup"), ("dessert", "dessert")]:
-            dish = day_menu.get("afternoon", {}).get(key)
-            if dish:
+        if meal == "afternoon" and soup_ss > 0:
+            soup_dish = (meal_dishes.get("soup_dish") or "").strip()
+            if soup_dish:
                 dishes_in_day.append({
-                    "ca": "CHIỀU",
-                    "dish_name": dish,
-                    "role": role,
-                    "portions": afternoon_ss
-                })
-        soup_dish = day_menu.get("afternoon", {}).get("soup_dish")
-        if soup_dish:
-            dishes_in_day.append({
-                "ca": "CHIỀU",
-                "dish_name": soup_dish,
-                "role": "soup_dish",
-                "portions": soup_ss if soup_ss > 0 else afternoon_ss
-            })
-
-    # TỐI
-    if has_dinner and dinner_ss > 0:
-        for role, key in [("main", "main"), ("sub", "sub"), ("stir", "stir"), ("soup", "soup"), ("dessert", "dessert")]:
-            dish = day_menu.get("dinner", {}).get(key)
-            if dish:
-                dishes_in_day.append({
-                    "ca": "TỐI",
-                    "dish_name": dish,
-                    "role": role,
-                    "portions": dinner_ss
+                    "ca": ca, "dish_name": soup_dish, "role": "soup_dish", "portions": soup_ss
                 })
 
     # 1. Estimations
-    estimations = calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_recipes_cache, config)
+    active_portions = {"lunch": lunch_ss, "afternoon": afternoon_ss, "dinner": dinner_ss}
+    estimations = calculate_daily_estimations(dishes_in_day, active_portions, norms_cache, soup_recipes_cache, config)
 
     # 2. Step 1 (Kiểm thực trước khi chế biến)
     supp1 = suppliers[0] if len(suppliers) > 0 else {"name": "CT Thái Lan Anh", "address": "An Phú", "phone": "0937 626 507", "delivery_person": "Lê Văn Bình"}
@@ -402,7 +383,7 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
             dispense_time = "10:00"
             eating_time = "11h00 đến 12h00"
         elif ca == "CHIỀU":
-            dispense_time = "15:00"
+            dispense_time = "15:45"
             eating_time = "16h00 đến 17h00"
         else:
             dispense_time = "22:00"
@@ -432,18 +413,15 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
     curr_dt = datetime.strptime(date_str, "%Y-%m-%d")
     next_day_str = (curr_dt + timedelta(days=1)).strftime("%Y-%m-%d")
 
-    for d in dishes_in_day:
+    for d, inspection in zip(dishes_in_day, step3_items):
         ca = d["ca"]
         stype = determine_sample_type(d["dish_name"], d["role"], dishes_cache)
-        sample_amount = "150 ml" if stype == "Lỏng" else "100 g"
-
-        if ca == "TRƯA":
-            sample_time = "10:00"
-        elif ca == "CHIỀU":
-            sample_time = "15:00"
+        if stype == "Lỏng":
+            sample_amount = f'{config.get("Thể tích mẫu thức ăn lỏng (ml)") or 150} ml'
         else:
-            sample_time = "22:00"
+            sample_amount = f'{config.get("Khối lượng mẫu thức ăn đặc (g)") or 100} g'
 
+        sample_time = inspection["dispense_time"]
         time_sampled = f"{date_str} {sample_time}"
         time_destroyed = f"{next_day_str} {sample_time}" # exactly 24h later
 
@@ -476,7 +454,8 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
             "date": date_str,
             "dish_name": s["dish_name"],
             "sample_time": s["time_sampled"].split(" ")[1] if " " in s["time_sampled"] else s["time_sampled"],
-            "sampler": s["sampler"]
+            "sampler": s["sampler"],
+            "sample_amount": s["sample_amount"]
         })
 
     return {
@@ -548,7 +527,11 @@ def audit_24_checklist(date_str, day_of_week, portions_info, step1, step2, step3
     })
 
     # 6. Số suất ngày đang chọn
-    total_ss = portions_info.get("lunch", 0) + portions_info.get("afternoon", 0) + portions_info.get("dinner", 0)
+    total_ss = portions_info.get("lunch", 0)
+    if portions_info.get("has_overtime"):
+        total_ss += portions_info.get("afternoon", 0)
+    if portions_info.get("has_dinner"):
+        total_ss += portions_info.get("dinner", 0)
     checklist.append({
         "id": 6,
         "title": "Số suất ngày đang chọn (trưa, chiều, tối)",

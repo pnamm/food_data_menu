@@ -301,8 +301,12 @@ def get_portions(date: str):
 
 @app.post("/api/portions/{date}")
 def save_portions(date: str, data: Dict[str, Any] = Body(...)):
-    conn = database.get_connection()
     day_name = get_day_name_from_date(date)
+    portion_fields = ("lunch_portions", "afternoon_portions", "dinner_portions", "afternoon_soup_portions")
+    counts = [data.get(field, 0) for field in portion_fields]
+    if any(type(count) is not int or count < 0 for count in counts):
+        raise HTTPException(status_code=400, detail="Số suất phải là số nguyên không âm")
+    conn = database.get_connection()
     conn.execute("""
     INSERT OR REPLACE INTO daily_portions 
     (date, day_of_week, lunch_portions, afternoon_portions, dinner_portions, afternoon_soup_portions, has_overtime, has_dinner)
@@ -310,10 +314,7 @@ def save_portions(date: str, data: Dict[str, Any] = Body(...)):
     """, (
         date,
         day_name,
-        data.get("lunch_portions", 0),
-        data.get("afternoon_portions", 0),
-        data.get("dinner_portions", 0),
-        data.get("afternoon_soup_portions", 0),
+        *counts,
         1 if data.get("has_overtime") else 0,
         1 if data.get("has_dinner") else 0
     ))
@@ -347,7 +348,8 @@ def get_daily_record(date: str):
                 "date": date,
                 "dish_name": s.get("dish_name", ""),
                 "sample_time": s.get("time_sampled", "").split(" ")[-1],
-                "sampler": s.get("sampler", "")
+                "sampler": s.get("sampler", ""),
+                "sample_amount": s.get("sample_amount", "")
             })
 
         return {

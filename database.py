@@ -81,7 +81,7 @@ def init_db():
         week_start_date TEXT NOT NULL,
         day_of_week TEXT NOT NULL, -- 'Thứ 2', 'Thứ 3', ...
         meal_type TEXT NOT NULL,   -- 'lunch', 'afternoon', 'dinner', 'vegetarian_lunch', 'vegetarian_afternoon'
-        dish_type TEXT NOT NULL,   -- 'main', 'sub', 'stir', 'soup', 'dessert', 'soup_dish'
+        dish_type TEXT NOT NULL,   -- 'main', 'sub', 'sub2', 'stir', 'soup', 'dessert', 'soup_dish'
         dish_name TEXT,
         PRIMARY KEY (week_start_date, day_of_week, meal_type, dish_type)
     )

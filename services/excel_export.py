@@ -1,7 +1,6 @@
 import openpyxl
 import os
 import shutil
-from datetime import datetime
 
 # Find template file in current project directory or parent directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,35 +45,55 @@ def export_daily_excel(date_str, daily_record_data, output_path):
                 if s1.get("sensory_passed"):
                     ws1.cell(row=r, column=13, value="✓")
 
-        # Ghi vào Mẫu 2
-        if 'MẪU 2 - BƯỚC 2' in wb.sheetnames:
-            ws2 = wb['MẪU 2 - BƯỚC 2']
-            for i, s2 in enumerate(step2[:24]):
-                r = 9 + i
-                ws2.cell(row=r, column=6, value=s2.get("prep_time"))
-                ws2.cell(row=r, column=7, value=s2.get("cook_time"))
-                if s2.get("hygiene_person"):
-                    ws2.cell(row=r, column=8, value="Đạt")
-                if s2.get("sensory_passed"):
-                    ws2.cell(row=r, column=11, value="✓")
+        # Replace template dish rows with the web record, clearing unused rows.
+        dish_tables = (
+            ("MẪU 2 - BƯỚC 2", step2, (
+                "stt", "ca", "dish_name", "main_ingredient", "portions", "prep_time",
+                "cook_time", "hygiene_person", "hygiene_equipment", "hygiene_environment",
+                "sensory_passed", "sensory_failed", "note",
+            )),
+            ("MẪU 3 - BƯỚC 3", step3, (
+                "stt", "ca", "dish_name", "portions", "dispense_time", "eating_time",
+                "container", "sensory_passed", "sensory_failed", "note",
+            )),
+            ("MẪU 5 - LƯU HỦY", sampling, (
+                "stt", "ca", "dish_name", "portions", "sample_amount", "container",
+                "temperature", "time_sampled", "time_destroyed", "sample_condition_on_destroy",
+                "sampler", "destroyer",
+            )),
+        )
+        for sheet_name, items, fields in dish_tables:
+            if sheet_name not in wb.sheetnames:
+                continue
+            ws = wb[sheet_name]
+            for index in range(24):
+                item = items[index] if index < len(items) else {}
+                for column, field in enumerate(fields, 1):
+                    value = item.get(field)
+                    if field == "sensory_failed":
+                        value = "✓" if item.get("sensory_passed") is False else None
+                    elif field == "sensory_passed":
+                        value = "✓" if value is True else None
+                    elif field.startswith("hygiene_") and value is not None:
+                        value = "Đạt" if value else "Không đạt"
+                    cell = ws.cell(row=9 + index, column=column)
+                    cell.value = value
+                    if isinstance(value, str):
+                        cell.data_type = "s"
 
-        # Ghi vào Mẫu 3
-        if 'MẪU 3 - BƯỚC 3' in wb.sheetnames:
-            ws3 = wb['MẪU 3 - BƯỚC 3']
-            for i, s3 in enumerate(step3[:24]):
-                r = 9 + i
-                ws3.cell(row=r, column=5, value=s3.get("dispense_time"))
-                if s3.get("sensory_passed"):
-                    ws3.cell(row=r, column=8, value="✓")
-
-        # Ghi vào Mẫu 5
-        if 'MẪU 5 - LƯU HỦY' in wb.sheetnames:
-            ws5 = wb['MẪU 5 - LƯU HỦY']
-            for i, s5 in enumerate(sampling[:24]):
-                r = 9 + i
-                ws5.cell(row=r, column=10, value="Bình thường")
-                ws5.cell(row=r, column=11, value=s5.get("sampler"))
-                ws5.cell(row=r, column=12, value=s5.get("destroyer"))
+        if "MẪU 4 - NHÃN" in wb.sheetnames:
+            ws = wb["MẪU 4 - NHÃN"]
+            for ca, first_row in (("TRƯA", 9), ("CHIỀU", 41), ("TỐI", 79)):
+                items = [item for item in sampling if item.get("ca") == ca]
+                for index in range(10):
+                    item = items[index] if index < len(items) else {}
+                    row = first_row + (index // 2) * 6
+                    column = 2 if index % 2 == 0 else 7
+                    for offset, field in enumerate(("ca", "dish_name", "time_sampled", "sampler"), 1):
+                        cell = ws.cell(row=row + offset, column=column)
+                        cell.value = item.get(field)
+                        if isinstance(cell.value, str):
+                            cell.data_type = "s"
 
         wb.save(output_path)
         return output_path

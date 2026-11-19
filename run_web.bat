@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 chcp 65001 > nul
 title HỆ THỐNG QUẢN LÝ THỰC ĐƠN & SỔ KIỂM THỰC 3 BƯỚC (QĐ 1246/QĐ-BYT)
 
@@ -15,6 +16,10 @@ echo.
 start "" http://localhost:8000
 
 :: Chạy Web Server
-python -m uvicorn app:app --host 127.0.0.1 --port 8000
+if exist ".venv\Scripts\python.exe" (
+    ".venv\Scripts\python.exe" -m uvicorn app:app --host 127.0.0.1 --port 8000
+) else (
+    python -m uvicorn app:app --host 127.0.0.1 --port 8000
+)
 
 pause

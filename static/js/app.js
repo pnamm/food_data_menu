@@ -5,9 +5,9 @@ const createEmptyWeeklyMenu = () => {
   const days = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
   for (const d of days) {
     res[d] = {
-      lunch: { main: "", sub: "", stir: "", soup: "", dessert: "" },
-      afternoon: { main: "", sub: "", stir: "", soup: "", dessert: "", soup_dish: "" },
-      dinner: { main: "", sub: "", stir: "", soup: "", dessert: "" },
+      lunch: { main: "", sub: "", sub2: "", stir: "", soup: "", dessert: "" },
+      afternoon: { main: "", sub: "", sub2: "", stir: "", soup: "", dessert: "", soup_dish: "" },
+      dinner: { main: "", sub: "", sub2: "", stir: "", soup: "", dessert: "" },
       vegetarian_lunch: { main: "", sub: "", stir: "", soup: "" },
       vegetarian_afternoon: { main: "", sub: "", stir: "", soup: "" }
     };
@@ -20,7 +20,8 @@ createApp({
     // Current date selection
     const selectedDate = ref("2026-11-02");
     const currentTab = ref("dashboard");
-    const isLoading = ref(false);
+    const isLoading = ref(true);
+    const loadedDate = ref("");
     const toast = ref({ show: false, message: "", type: "success" });
 
     // Core Data
@@ -57,7 +58,7 @@ createApp({
     });
 
     const weeklyMenu = ref(createEmptyWeeklyMenu());
-    const weekStartDate = ref("2026-11-02");
+    const weekStartDate = ref("");
     const dishes = ref([]);
     const suppliers = ref([]);
     const norms = ref([]);
@@ -105,7 +106,7 @@ createApp({
     const currentDayName = computed(() => {
       if (!selectedDate.value) return "Thứ 2";
       const d = new Date(selectedDate.value);
-      const dayIndex = (d.getDay() + 6) % 7; // Monday = 0
+      const dayIndex = (d.getUTCDay() + 6) % 7; // Monday = 0
       return daysOfWeek[dayIndex] || "Thứ 2";
     });
 
@@ -212,70 +213,67 @@ createApp({
       }
     };
 
+    const getWeekStart = (date) => {
+      const monday = new Date(date);
+      monday.setUTCDate(monday.getUTCDate() - (monday.getUTCDay() + 6) % 7);
+      return monday.toISOString().slice(0, 10);
+    };
+
     const loadWeeklyMenu = async (weekStart) => {
       try {
-        const url = weekStart ? `/api/menu/week?week_start=${weekStart}` : "/api/menu/week";
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          const base = createEmptyWeeklyMenu();
-          if (data.menu) {
-            for (const d of daysOfWeek) {
-              if (data.menu[d]) {
-                base[d] = {
-                  lunch: { ...base[d].lunch, ...data.menu[d].lunch },
-                  afternoon: { ...base[d].afternoon, ...data.menu[d].afternoon },
-                  dinner: { ...base[d].dinner, ...data.menu[d].dinner },
-                  vegetarian_lunch: { ...base[d].vegetarian_lunch, ...data.menu[d].vegetarian_lunch },
-                  vegetarian_afternoon: { ...base[d].vegetarian_afternoon, ...data.menu[d].vegetarian_afternoon }
-                };
-              }
+        const res = await fetch(`/api/menu/week?week_start=${weekStart}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const base = createEmptyWeeklyMenu();
+        if (data.menu) {
+          for (const d of daysOfWeek) {
+            if (data.menu[d]) {
+              base[d] = {
+                lunch: { ...base[d].lunch, ...data.menu[d].lunch },
+                afternoon: { ...base[d].afternoon, ...data.menu[d].afternoon },
+                dinner: { ...base[d].dinner, ...data.menu[d].dinner },
+                vegetarian_lunch: { ...base[d].vegetarian_lunch, ...data.menu[d].vegetarian_lunch },
+                vegetarian_afternoon: { ...base[d].vegetarian_afternoon, ...data.menu[d].vegetarian_afternoon }
+              };
             }
           }
-          weeklyMenu.value = base;
-          if (data.week_start) weekStartDate.value = data.week_start;
         }
+        weeklyMenu.value = base;
+        if (data.week_start) weekStartDate.value = data.week_start;
       } catch (err) {
-        console.error("Lỗi tải thực đơn tuần:", err);
+        weeklyMenu.value = createEmptyWeeklyMenu();
+        weekStartDate.value = "";
+        showToast("Lỗi tải thực đơn tuần: " + err.message, "danger");
       }
     };
 
     const loadPortions = async (date) => {
-      try {
-        const res = await fetch(`/api/portions/${date}`);
-        if (res.ok) {
-          const data = await res.json();
-          portions.value = {
-            ...data,
-            has_overtime: Boolean(data.has_overtime),
-            has_dinner: Boolean(data.has_dinner)
-          };
-        }
-      } catch (err) {
-        console.error("Lỗi tải suất ăn:", err);
-      }
+      const res = await fetch(`/api/portions/${date}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      portions.value = {
+        ...data,
+        has_overtime: Boolean(data.has_overtime),
+        has_dinner: Boolean(data.has_dinner)
+      };
     };
 
     const loadDailyRecord = async (date) => {
       isLoading.value = true;
+      loadedDate.value = "";
+      auditData.value = null;
       try {
+        const weekStart = getWeekStart(date);
+        if (weekStartDate.value !== weekStart) await loadWeeklyMenu(weekStart);
         await loadPortions(date);
         const res = await fetch(`/api/daily/${date}`);
-        if (res.ok) {
-          const data = await res.json();
-          dailyData.value = {
-            is_saved: data.is_saved || false,
-            estimations: data.estimations || [],
-            step1: data.step1 || [],
-            step2: data.step2 || [],
-            step3: data.step3 || [],
-            sampling: data.sampling || [],
-            labels: data.labels || []
-          };
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        dailyData.value = await res.json();
+        loadedDate.value = date;
         await runAudit(date);
       } catch (err) {
-        console.error("Không thể tải dữ liệu ngày:", err);
+        dailyData.value = { is_saved: false, estimations: [], step1: [], step2: [], step3: [], sampling: [], labels: [] };
+        showToast("Lỗi tải hồ sơ ngày: " + err.message, "danger");
       } finally {
         isLoading.value = false;
       }
@@ -305,29 +303,29 @@ createApp({
 
     const changeDate = (days) => {
       const d = new Date(selectedDate.value);
-      d.setDate(d.getDate() + days);
+      d.setUTCDate(d.getUTCDate() + days);
       selectedDate.value = d.toISOString().split("T")[0];
     };
 
     const triggerAutoFill = async () => {
+      if (dailyData.value.is_saved && !confirm("Điền tự động sẽ thay thế hồ sơ đã lưu của ngày này. Bạn muốn tiếp tục?")) return;
       isLoading.value = true;
       try {
         const res = await fetch(`/api/daily/${selectedDate.value}/autofill`, { method: "POST" });
-        if (res.ok) {
-          const data = await res.json();
-          dailyData.value = {
-            is_saved: true,
-            estimations: data.estimations || [],
-            step1: data.step1 || [],
-            step2: data.step2 || [],
-            step3: data.step3 || [],
-            sampling: data.sampling || [],
-            labels: data.labels || []
-          };
-          await runAudit(selectedDate.value);
-          await loadHistory();
-          showToast("✨ Đã tự động sinh đầy đủ hồ sơ ngày chuẩn quy chuẩn!", "success");
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        dailyData.value = {
+          is_saved: true,
+          estimations: data.estimations || [],
+          step1: data.step1 || [],
+          step2: data.step2 || [],
+          step3: data.step3 || [],
+          sampling: data.sampling || [],
+          labels: data.labels || []
+        };
+        await runAudit(selectedDate.value);
+        await loadHistory();
+        showToast("Đã tạo và lưu hồ sơ từ thực đơn tuần.", "success");
       } catch (err) {
         showToast("Lỗi khi tự động điền: " + err.message, "danger");
       } finally {
@@ -338,28 +336,45 @@ createApp({
     const saveDailyRecord = async () => {
       isLoading.value = true;
       try {
-        // Save portions first
-        await fetch(`/api/portions/${selectedDate.value}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(portions.value)
-        });
-
         // Save daily record
         const res = await fetch(`/api/daily/${selectedDate.value}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(dailyData.value)
         });
-        if (res.ok) {
-          const result = await res.json();
-          dailyData.value.is_saved = true;
-          await runAudit(selectedDate.value);
-          await loadHistory();
-          showToast(result.message || "Đã lưu hồ sơ thành công!", "success");
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const result = await res.json();
+        dailyData.value.is_saved = true;
+        await runAudit(selectedDate.value);
+        await loadHistory();
+        showToast(result.message || "Đã lưu hồ sơ thành công!", "success");
       } catch (err) {
         showToast("Lỗi lưu hồ sơ: " + err.message, "danger");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const saveSelectedPortions = async () => {
+      isLoading.value = true;
+      try {
+        const res = await fetch(`/api/portions/${selectedDate.value}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(portions.value)
+        });
+        if (!res.ok) {
+          const error = await res.json();
+          throw new Error(error.detail || `HTTP ${res.status}`);
+        }
+        if (!dailyData.value.is_saved) {
+          await loadDailyRecord(selectedDate.value);
+        } else {
+          await runAudit(selectedDate.value);
+        }
+        showToast("Đã lưu số suất và ca.");
+      } catch (err) {
+        showToast("Lỗi lưu số suất: " + err.message, "danger");
       } finally {
         isLoading.value = false;
       }
@@ -376,11 +391,10 @@ createApp({
             menu: weeklyMenu.value
           })
         });
-        if (res.ok) {
-          const result = await res.json();
-          showToast(result.message || "Đã lưu thực đơn tuần thành công!", "success");
-          await loadDailyRecord(selectedDate.value);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const result = await res.json();
+        showToast(result.message || "Đã lưu thực đơn tuần thành công!", "success");
+        if (!dailyData.value.is_saved) await loadDailyRecord(selectedDate.value);
       } catch (err) {
         showToast("Lỗi lưu thực đơn: " + err.message, "danger");
       } finally {
@@ -559,9 +573,7 @@ createApp({
     };
 
     // Watch date change
-    watch(selectedDate, (newDate) => {
-      loadDailyRecord(newDate);
-    });
+    watch(selectedDate, loadDailyRecord);
 
     onMounted(async () => {
       await loadConfig();
@@ -570,7 +582,6 @@ createApp({
       await loadNorms();
       await loadSoupRecipes();
       await loadSoupConfig();
-      await loadWeeklyMenu();
       await loadDailyRecord(selectedDate.value);
       await loadHistory();
     });
@@ -579,6 +590,7 @@ createApp({
       selectedDate,
       currentTab,
       isLoading,
+      loadedDate,
       toast,
       config,
       dailyData,
@@ -610,6 +622,7 @@ createApp({
       triggerAutoFill,
       saveDailyRecord,
       saveWeeklyMenu,
+      saveSelectedPortions,
       saveConfig,
       updateActualReceived,
       exportExcel,
