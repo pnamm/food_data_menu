@@ -69,6 +69,24 @@ createApp({
     });
     const historyList = ref([]);
 
+    // Soup recipes data
+    const soupRecipes = ref([]);
+    const soupConfig = ref({
+      bowls_per_kg: 6,
+      grams_per_bowl: 166.7,
+      noodle_mapping: []
+    });
+    const selectedSoupDish = ref("ALL");
+    const newSoupIngredient = ref({
+      dish: "Hủ Tiếu",
+      ingredient: "",
+      category: "Đạm",
+      norm: 50,
+      unit: "g",
+      waste_rate: 0,
+      note: ""
+    });
+
     // UI state for search/modals
     const dishSearchQuery = ref("");
     const newDish = ref({ name: "", main_ingredient: "", sample_type: "Đặc", step1_group: "I", norm_group: "" });
@@ -89,6 +107,28 @@ createApp({
       const d = new Date(selectedDate.value);
       const dayIndex = (d.getDay() + 6) % 7; // Monday = 0
       return daysOfWeek[dayIndex] || "Thứ 2";
+    });
+
+    // Today's afternoon soup dish
+    const todaySoupDish = computed(() => {
+      const d = currentDayName.value;
+      if (weeklyMenu.value[d] && weeklyMenu.value[d].afternoon) {
+        return weeklyMenu.value[d].afternoon.soup_dish || "";
+      }
+      return "";
+    });
+
+    // Unique list of soup dishes
+    const soupDishesList = computed(() => {
+      const set = new Set();
+      soupRecipes.value.forEach(r => { if (r.dish) set.add(r.dish); });
+      return Array.from(set).sort();
+    });
+
+    // Filtered soup recipes
+    const filteredSoupRecipes = computed(() => {
+      if (selectedSoupDish.value === "ALL") return soupRecipes.value;
+      return soupRecipes.value.filter(r => r.dish === selectedSoupDish.value);
     });
 
     // Filtered dishes
@@ -151,6 +191,24 @@ createApp({
         if (res.ok) norms.value = await res.json();
       } catch (err) {
         console.error("Lỗi tải định mức:", err);
+      }
+    };
+
+    const loadSoupRecipes = async () => {
+      try {
+        const res = await fetch("/api/soup-recipes");
+        if (res.ok) soupRecipes.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải công thức món nước:", err);
+      }
+    };
+
+    const loadSoupConfig = async () => {
+      try {
+        const res = await fetch("/api/soup-config");
+        if (res.ok) soupConfig.value = await res.json();
+      } catch (err) {
+        console.error("Lỗi tải định lượng sợi:", err);
       }
     };
 
@@ -433,6 +491,73 @@ createApp({
       }
     };
 
+    // Soup recipes CRUD
+    const saveSoupRecipe = async (item) => {
+      try {
+        const res = await fetch("/api/soup-recipes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(item)
+        });
+        if (res.ok) {
+          showToast(`Đã cập nhật định mức ${item.ingredient} (${item.dish})`);
+        }
+      } catch (err) {
+        showToast("Lỗi lưu: " + err.message, "danger");
+      }
+    };
+
+    const saveNewSoupIngredient = async () => {
+      if (!newSoupIngredient.value.dish.trim() || !newSoupIngredient.value.ingredient.trim()) {
+        showToast("Vui lòng điền tên món nước và tên nguyên liệu", "danger");
+        return;
+      }
+      try {
+        const res = await fetch("/api/soup-recipes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newSoupIngredient.value)
+        });
+        if (res.ok) {
+          showToast(`Đã thêm ${newSoupIngredient.value.ingredient} vào món ${newSoupIngredient.value.dish}`);
+          newSoupIngredient.value.ingredient = "";
+          newSoupIngredient.value.note = "";
+          await loadSoupRecipes();
+        }
+      } catch (err) {
+        showToast("Lỗi thêm: " + err.message, "danger");
+      }
+    };
+
+    const deleteSoupIngredient = async (id, dish, ingredient) => {
+      if (!confirm(`Bạn có chắc muốn xóa nguyên liệu "${ingredient}" khỏi món "${dish}"?`)) return;
+      try {
+        const res = await fetch(`/api/soup-recipes/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast(`Đã xóa "${ingredient}"`);
+          await loadSoupRecipes();
+        }
+      } catch (err) {
+        showToast("Lỗi: " + err.message, "danger");
+      }
+    };
+
+    const updateSoupConfig = async () => {
+      try {
+        const res = await fetch("/api/soup-config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bowls_per_kg: soupConfig.value.bowls_per_kg })
+        });
+        if (res.ok) {
+          soupConfig.value.grams_per_bowl = Math.round((1000.0 / soupConfig.value.bowls_per_kg) * 10) / 10;
+          showToast("Đã lưu định lượng sợi!");
+        }
+      } catch (err) {
+        showToast("Lỗi: " + err.message, "danger");
+      }
+    };
+
     // Watch date change
     watch(selectedDate, (newDate) => {
       loadDailyRecord(newDate);
@@ -443,6 +568,8 @@ createApp({
       await loadDishes();
       await loadSuppliers();
       await loadNorms();
+      await loadSoupRecipes();
+      await loadSoupConfig();
       await loadWeeklyMenu();
       await loadDailyRecord(selectedDate.value);
       await loadHistory();
@@ -463,6 +590,13 @@ createApp({
       norms,
       auditData,
       historyList,
+      soupRecipes,
+      soupConfig,
+      selectedSoupDish,
+      newSoupIngredient,
+      soupDishesList,
+      filteredSoupRecipes,
+      todaySoupDish,
       daysOfWeek,
       currentDayName,
       totalDayPortions,
@@ -484,6 +618,10 @@ createApp({
       deleteDish,
       saveSupplier,
       deleteSupplier,
+      saveSoupRecipe,
+      saveNewSoupIngredient,
+      deleteSoupIngredient,
+      updateSoupConfig,
       loadDailyRecord
     };
   }

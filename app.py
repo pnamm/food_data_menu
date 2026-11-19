@@ -55,7 +55,7 @@ def get_norms_cache():
 
 def get_soup_recipes_cache():
     conn = database.get_connection()
-    rows = conn.execute("SELECT dish, ingredient, category, norm, unit, waste_rate, note FROM soup_recipes").fetchall()
+    rows = conn.execute("SELECT id, dish, ingredient, category, norm, unit, waste_rate, note FROM soup_recipes ORDER BY dish ASC, id ASC").fetchall()
     conn.close()
     return [dict(r) for r in rows]
 
@@ -171,6 +171,59 @@ def update_norm(data: Dict[str, Any] = Body(...)):
 @app.get("/api/soup-recipes")
 def get_soup_recipes():
     return get_soup_recipes_cache()
+
+@app.post("/api/soup-recipes")
+def save_soup_recipe(data: Dict[str, Any] = Body(...)):
+    conn = database.get_connection()
+    recipe_id = data.get("id")
+    if recipe_id:
+        conn.execute("""
+        UPDATE soup_recipes 
+        SET dish = ?, ingredient = ?, category = ?, norm = ?, unit = ?, waste_rate = ?, note = ?
+        WHERE id = ?
+        """, (data["dish"], data["ingredient"], data.get("category", "Đạm"), data.get("norm", 50), data.get("unit", "g"), data.get("waste_rate", 0), data.get("note", ""), recipe_id))
+    else:
+        conn.execute("""
+        INSERT INTO soup_recipes (dish, ingredient, category, norm, unit, waste_rate, note)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (data["dish"], data["ingredient"], data.get("category", "Đạm"), data.get("norm", 50), data.get("unit", "g"), data.get("waste_rate", 0), data.get("note", "")))
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": "Đã lưu công thức nguyên liệu món nước"}
+
+@app.delete("/api/soup-recipes/{recipe_id}")
+def delete_soup_recipe(recipe_id: int):
+    conn = database.get_connection()
+    conn.execute("DELETE FROM soup_recipes WHERE id = ?", (recipe_id,))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.get("/api/soup-config")
+def get_soup_config():
+    config = get_config_dict()
+    bowls_per_kg = float(config.get("Định lượng sợi: số tô/kg", 6))
+    return {
+        "bowls_per_kg": bowls_per_kg,
+        "grams_per_bowl": round(1000.0 / bowls_per_kg, 1),
+        "noodle_mapping": [
+            {"keyword": "Bánh Canh", "noodle_type": "Bánh canh tươi"},
+            {"keyword": "Hủ Tiếu", "noodle_type": "Hủ tiếu sợi tươi"},
+            {"keyword": "Phở", "noodle_type": "Bánh phở tươi"},
+            {"keyword": "Miến", "noodle_type": "Miến"},
+            {"keyword": "Mì", "noodle_type": "Mì trứng tươi"},
+            {"keyword": "Bún", "noodle_type": "Bún tươi"}
+        ]
+    }
+
+@app.post("/api/soup-config")
+def update_soup_config(data: Dict[str, Any] = Body(...)):
+    bowls = data.get("bowls_per_kg", 6)
+    conn = database.get_connection()
+    conn.execute("INSERT OR REPLACE INTO system_config (key, value) VALUES (?, ?)", ("Định lượng sợi: số tô/kg", str(bowls)))
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": "Đã lưu định lượng sợi"}
 
 @app.get("/api/menu/week")
 def get_weekly_menu(week_start: Optional[str] = Query(None)):
