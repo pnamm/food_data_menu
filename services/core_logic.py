@@ -310,8 +310,12 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
             "norm_unit": est["norm_unit"],
             "waste_rate": est["waste_rate"],
             "unit": est["unit"],
+            "supplier_id": chosen_supp.get("id"),
             "supplier_name": chosen_supp["name"],
-            "supplier_address": chosen_supp["address"] + (f" - ĐT: {chosen_supp['phone']}" if chosen_supp.get("phone") else ""),
+            "supplier_address": " - ".join(filter(None, (
+                chosen_supp.get("address"),
+                f"ĐT: {chosen_supp['phone']}" if chosen_supp.get("phone") else None,
+            ))),
             "delivery_person": chosen_supp["delivery_person"],
             "certificate": "Đạt",
             "sensory_passed": True, # Đạt cảm quan

@@ -451,6 +451,24 @@ createApp({
       }
     };
 
+    const selectedSupplierId = (item) => {
+      const supplier = item.supplier_id == null
+        ? suppliers.value.find(s => s.name === item.supplier_name)
+        : suppliers.value.find(s => s.id === item.supplier_id);
+      return supplier ? String(supplier.id) : "";
+    };
+
+    const changeReceivingSupplier = (item, id) => {
+      const supplier = suppliers.value.find(s => String(s.id) === id);
+      if (!supplier) return;
+      Object.assign(item, {
+        supplier_id: supplier.id,
+        supplier_name: supplier.name,
+        supplier_address: [supplier.address, supplier.phone && `ĐT: ${supplier.phone}`].filter(Boolean).join(" - "),
+        delivery_person: supplier.delivery_person || ""
+      });
+    };
+
     const updateActualReceived = (item, val) => {
       const num = parseFloat(val) || 0;
       item.actual_received = num;
@@ -693,6 +711,8 @@ createApp({
       saveWeeklyMenu,
       saveSelectedPortions,
       saveConfig,
+      selectedSupplierId,
+      changeReceivingSupplier,
       updateActualReceived,
       exportExcel,
       printCurrent,
