@@ -22,7 +22,9 @@ createApp({
     const currentTab = ref("dashboard");
     const isLoading = ref(true);
     const loadedDate = ref("");
-    const toast = ref({ show: false, message: "", type: "success" });
+    const notifications = ref([]);
+    const toastTimers = new Map();
+    let nextToastId = 0;
 
     // Core Data
     const config = ref({
@@ -59,6 +61,8 @@ createApp({
 
     const weeklyMenu = ref(createEmptyWeeklyMenu());
     const weekStartDate = ref("");
+    let savedWeekMenu = "";
+    let savedPortions = "";
     const dishes = ref([]);
     const suppliers = ref([]);
     const norms = ref([]);
@@ -78,6 +82,27 @@ createApp({
       noodle_mapping: []
     });
     const selectedSoupDish = ref("ALL");
+    const recipeType = ref("soup");
+    const activeRecipes = computed(() => soupRecipes.value.filter(recipe => recipe.recipe_type === recipeType.value));
+    const selectRecipeType = (type) => {
+      recipeType.value = type;
+      selectedSoupDish.value = "ALL";
+      newSoupIngredient.value.dish = "";
+    };
+    const recipeDailyAmount = (item) => {
+      const name = item.dish.trim().toLowerCase();
+      const count = dailyData.value.step2.reduce((total, dish) => {
+        const type = dish.role === "soup_dish" ? "soup" : "savory";
+        return type === item.recipe_type && dish.dish_name.trim().toLowerCase() === name
+          ? total + dish.portions : total;
+      }, 0);
+      if (!count) return "—";
+      const raw = count * item.norm * (1 + item.waste_rate / 100);
+      const unit = item.unit || "g";
+      if (unit === "g") return `${(raw / 1000).toFixed(2)} kg`;
+      if (unit === "ml") return `${(raw / 1000).toFixed(2)} lít`;
+      return `${raw.toFixed(2)} ${unit}`;
+    };
     const newSoupIngredient = ref({
       dish: "Hủ Tiếu",
       ingredient: "",
@@ -97,9 +122,17 @@ createApp({
     // Days list
     const daysOfWeek = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
 
+    const dismissToast = (id) => {
+      clearTimeout(toastTimers.get(id));
+      toastTimers.delete(id);
+      notifications.value = notifications.value.filter(notice => notice.id !== id);
+    };
+
     const showToast = (message, type = "success") => {
-      toast.value = { show: true, message, type };
-      setTimeout(() => { toast.value.show = false; }, 3500);
+      if (notifications.value.length >= 3) dismissToast(notifications.value[0].id);
+      const id = ++nextToastId;
+      notifications.value.push({ id, message, type });
+      toastTimers.set(id, setTimeout(() => dismissToast(id), type === "success" ? 4500 : 7500));
     };
 
     // Calculate day name
@@ -122,14 +155,14 @@ createApp({
     // Unique list of soup dishes
     const soupDishesList = computed(() => {
       const set = new Set();
-      soupRecipes.value.forEach(r => { if (r.dish) set.add(r.dish); });
+      activeRecipes.value.forEach(r => { if (r.dish) set.add(r.dish); });
       return Array.from(set).sort();
     });
 
     // Filtered soup recipes
     const filteredSoupRecipes = computed(() => {
-      if (selectedSoupDish.value === "ALL") return soupRecipes.value;
-      return soupRecipes.value.filter(r => r.dish === selectedSoupDish.value);
+      if (selectedSoupDish.value === "ALL") return activeRecipes.value;
+      return activeRecipes.value.filter(r => r.dish === selectedSoupDish.value);
     });
 
     // Filtered dishes
@@ -197,7 +230,7 @@ createApp({
 
     const loadSoupRecipes = async () => {
       try {
-        const res = await fetch("/api/soup-recipes");
+        const res = await fetch("/api/soup-recipes?include_savory=true");
         if (res.ok) soupRecipes.value = await res.json();
       } catch (err) {
         console.error("Lỗi tải công thức món nước:", err);
@@ -239,10 +272,12 @@ createApp({
           }
         }
         weeklyMenu.value = base;
+        savedWeekMenu = JSON.stringify(base);
         if (data.week_start) weekStartDate.value = data.week_start;
       } catch (err) {
         weeklyMenu.value = createEmptyWeeklyMenu();
         weekStartDate.value = "";
+        savedWeekMenu = "";
         showToast("Lỗi tải thực đơn tuần: " + err.message, "danger");
       }
     };
@@ -256,6 +291,7 @@ createApp({
         has_overtime: Boolean(data.has_overtime),
         has_dinner: Boolean(data.has_dinner)
       };
+      savedPortions = JSON.stringify(portions.value);
     };
 
     const loadDailyRecord = async (date) => {
@@ -367,12 +403,8 @@ createApp({
           const error = await res.json();
           throw new Error(error.detail || `HTTP ${res.status}`);
         }
-        if (!dailyData.value.is_saved) {
-          await loadDailyRecord(selectedDate.value);
-        } else {
-          await runAudit(selectedDate.value);
-        }
-        showToast("Đã lưu số suất và ca.");
+        await loadDailyRecord(selectedDate.value);
+        if (loadedDate.value === selectedDate.value) showToast("Đã lưu số suất và tính lại nguyên liệu.");
       } catch (err) {
         showToast("Lỗi lưu số suất: " + err.message, "danger");
       } finally {
@@ -393,6 +425,7 @@ createApp({
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const result = await res.json();
+        savedWeekMenu = JSON.stringify(weeklyMenu.value);
         showToast(result.message || "Đã lưu thực đơn tuần thành công!", "success");
         if (!dailyData.value.is_saved) await loadDailyRecord(selectedDate.value);
       } catch (err) {
@@ -421,6 +454,9 @@ createApp({
     const updateActualReceived = (item, val) => {
       const num = parseFloat(val) || 0;
       item.actual_received = num;
+      item.actual_received_entered = true;
+      const receivingRow = dailyData.value.step1.find(row => row.stt === item.stt);
+      if (receivingRow) receivingRow.quantity = num;
       if (item.need_amount > 0) {
         const diff = (num - item.need_amount) / item.need_amount;
         item.diff_percent = Math.round(diff * 1000) / 10;
@@ -433,8 +469,36 @@ createApp({
       }
     };
 
-    const exportExcel = () => {
-      window.open(`/api/export-excel/${selectedDate.value}`, "_blank");
+    const exportExcel = async () => {
+      if (savedPortions !== JSON.stringify(portions.value)) {
+        showToast("Hãy lưu số suất và tính nguyên liệu trước khi xuất Excel.", "warning");
+        return;
+      }
+      if (savedWeekMenu && savedWeekMenu !== JSON.stringify(weeklyMenu.value)) {
+        showToast("Hãy lưu thực đơn tuần trước khi xuất Excel.", "warning");
+        return;
+      }
+      const date = selectedDate.value;
+      isLoading.value = true;
+      try {
+        const res = await fetch(`/api/export-excel/${date}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dailyData.value)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const url = URL.createObjectURL(await res.blob());
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Kiem_thuc_${date}.xlsx`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast("Đã tạo file Excel cho ngày " + date + ".");
+      } catch (err) {
+        showToast("Lỗi xuất Excel: " + err.message, "danger");
+      } finally {
+        isLoading.value = false;
+      }
     };
 
     const printCurrent = () => {
@@ -513,9 +577,10 @@ createApp({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(item)
         });
-        if (res.ok) {
-          showToast(`Đã cập nhật định mức ${item.ingredient} (${item.dish})`);
-        }
+        if (!res.ok) throw new Error((await res.json()).detail || `HTTP ${res.status}`);
+        await loadSoupRecipes();
+        if (!dailyData.value.is_saved) await loadDailyRecord(selectedDate.value);
+        showToast(`Đã cập nhật định mức ${item.ingredient} (${item.dish})`);
       } catch (err) {
         showToast("Lỗi lưu: " + err.message, "danger");
       }
@@ -523,21 +588,21 @@ createApp({
 
     const saveNewSoupIngredient = async () => {
       if (!newSoupIngredient.value.dish.trim() || !newSoupIngredient.value.ingredient.trim()) {
-        showToast("Vui lòng điền tên món nước và tên nguyên liệu", "danger");
+        showToast("Vui lòng điền tên món và tên nguyên liệu", "warning");
         return;
       }
       try {
         const res = await fetch("/api/soup-recipes", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newSoupIngredient.value)
+          body: JSON.stringify({ ...newSoupIngredient.value, recipe_type: recipeType.value })
         });
-        if (res.ok) {
-          showToast(`Đã thêm ${newSoupIngredient.value.ingredient} vào món ${newSoupIngredient.value.dish}`);
-          newSoupIngredient.value.ingredient = "";
-          newSoupIngredient.value.note = "";
-          await loadSoupRecipes();
-        }
+        if (!res.ok) throw new Error((await res.json()).detail || `HTTP ${res.status}`);
+        showToast(`Đã thêm ${newSoupIngredient.value.ingredient} vào món ${newSoupIngredient.value.dish}`);
+        newSoupIngredient.value.ingredient = "";
+        newSoupIngredient.value.note = "";
+        await loadSoupRecipes();
+        if (!dailyData.value.is_saved) await loadDailyRecord(selectedDate.value);
       } catch (err) {
         showToast("Lỗi thêm: " + err.message, "danger");
       }
@@ -547,10 +612,10 @@ createApp({
       if (!confirm(`Bạn có chắc muốn xóa nguyên liệu "${ingredient}" khỏi món "${dish}"?`)) return;
       try {
         const res = await fetch(`/api/soup-recipes/${id}`, { method: "DELETE" });
-        if (res.ok) {
-          showToast(`Đã xóa "${ingredient}"`);
-          await loadSoupRecipes();
-        }
+        if (!res.ok) throw new Error((await res.json()).detail || `HTTP ${res.status}`);
+        showToast(`Đã xóa "${ingredient}"`);
+        await loadSoupRecipes();
+        if (!dailyData.value.is_saved) await loadDailyRecord(selectedDate.value);
       } catch (err) {
         showToast("Lỗi: " + err.message, "danger");
       }
@@ -591,7 +656,8 @@ createApp({
       currentTab,
       isLoading,
       loadedDate,
-      toast,
+      notifications,
+      dismissToast,
       config,
       dailyData,
       portions,
@@ -602,7 +668,10 @@ createApp({
       norms,
       auditData,
       historyList,
-      soupRecipes,
+      activeRecipes,
+      recipeType,
+      selectRecipeType,
+      recipeDailyAmount,
       soupConfig,
       selectedSoupDish,
       newSoupIngredient,

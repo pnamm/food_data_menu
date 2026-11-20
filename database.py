@@ -75,6 +75,10 @@ def init_db():
     )
     """)
 
+    columns = {row["name"] for row in cursor.execute("PRAGMA table_info(soup_recipes)")}
+    if "recipe_type" not in columns:
+        cursor.execute("ALTER TABLE soup_recipes ADD COLUMN recipe_type TEXT NOT NULL DEFAULT 'soup'")
+
     # 6. Weekly Menus (Lưu theo tuần: week_start_date: YYYY-MM-DD là Thứ 2)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS weekly_menus (

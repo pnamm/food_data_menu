@@ -85,6 +85,22 @@ def map_ingredient_to_norm_group(ingredient_name, dish_name="", dish_role=""):
 
     return "Món mặn khác (không nhận diện)"
 
+def recipe_for_dish(recipes, dish_name, role):
+    recipe_type = "soup" if role == "soup_dish" else "savory"
+    return [recipe for recipe in recipes
+            if recipe.get("recipe_type", "soup") == recipe_type
+            and recipe["dish"].strip().casefold() == dish_name.strip().casefold()]
+
+
+def ingredient_amount(portions, norm, unit, waste=0):
+    amount = portions * norm * (1 + waste / 100)
+    if unit == "g":
+        return amount / 1000, "kg"
+    if unit == "ml":
+        return amount / 1000, "lít"
+    return amount, unit
+
+
 def calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_recipes_cache, config):
     """
     dishes_in_day: list of dicts:
@@ -107,25 +123,15 @@ def calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_
         if portions <= 0:
             continue
 
-        # Check if it's afternoon soup dish with recipe in soup_recipes
-        is_soup_dish = (role == "soup_dish")
-        soup_matched = [sr for sr in soup_recipes_cache if sr["dish"].lower() == dish_name.lower()]
-
-        if is_soup_dish and soup_matched:
-            for sr in soup_matched:
+        recipes = recipe_for_dish(soup_recipes_cache, dish_name, role)
+        if recipes:
+            for sr in recipes:
                 ing = sr["ingredient"]
-                key = f"{ing}_{sr['category']}"
                 norm_val = sr["norm"] or 0
                 waste = sr["waste_rate"] or 0
                 unit = sr["unit"] or "g"
-                
-                # Cần = portions * norm * (1 + waste/100)
-                if unit == "g":
-                    need_kg = (portions * norm_val * (1 + waste / 100)) / 1000.0
-                    unit_calc = "kg"
-                else:
-                    need_kg = portions * norm_val * (1 + waste / 100)
-                    unit_calc = unit
+                need_kg, unit_calc = ingredient_amount(portions, norm_val, unit, waste)
+                key = (ing.casefold(), unit_calc, norm_val, unit, waste)
 
                 if key in seen_ingredients:
                     seen_ingredients[key]["need_amount"] += need_kg
@@ -133,7 +139,7 @@ def calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_
                 else:
                     seen_ingredients[key] = {
                         "ingredient": ing,
-                        "norm_group": f"Món nước ({sr['dish']})",
+                        "norm_group": f"Công thức ({sr['dish']})",
                         "norm_per_portion": norm_val,
                         "norm_unit": unit,
                         "waste_rate": waste,
@@ -151,17 +157,8 @@ def calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_
             unit = norm_info.get("unit", "g")
             waste = 0.0
 
-            if unit == "g":
-                need_kg = (portions * norm_val) / 1000.0
-                unit_calc = "kg"
-            elif unit == "quả" or unit == "hộp":
-                need_kg = portions * norm_val
-                unit_calc = unit
-            else:
-                need_kg = (portions * norm_val) / 1000.0
-                unit_calc = "kg"
-
-            key = main_ing
+            need_kg, unit_calc = ingredient_amount(portions, norm_val, unit)
+            key = (main_ing.casefold(), unit_calc, norm_val, unit, waste)
             if key in seen_ingredients:
                 seen_ingredients[key]["need_amount"] += need_kg
                 seen_ingredients[key]["portions"] += portions
@@ -193,6 +190,8 @@ def calculate_daily_estimations(dishes_in_day, portions_info, norms_cache, soup_
     ]
 
     for ci in common_items:
+        if total_portions <= 0:
+            break
         need = (total_portions * ci["standard"]) / ci["div"]
         seen_ingredients[ci["ingredient"]] = {
             "ingredient": ci["ingredient"],
@@ -306,6 +305,10 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
             "date_in": date_str,
             "time_in": hour_in,
             "quantity": est["actual_received"],
+            "need_amount": est["need_amount"],
+            "norm_per_portion": est["norm_per_portion"],
+            "norm_unit": est["norm_unit"],
+            "waste_rate": est["waste_rate"],
             "unit": est["unit"],
             "supplier_name": chosen_supp["name"],
             "supplier_address": chosen_supp["address"] + (f" - ĐT: {chosen_supp['phone']}" if chosen_supp.get("phone") else ""),
@@ -326,11 +329,20 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
     for d in dishes_in_day:
         ca = d["ca"]
         dish_name = d["dish_name"]
-        main_ing = extract_main_ingredient(dish_name)
-        
-        # Estimate quantity
-        norm_info = norms_cache.get(map_ingredient_to_norm_group(main_ing, dish_name, d["role"]), {"standard": 100})
-        total_ing_kg = round((d["portions"] * norm_info["standard"]) / 1000.0, 1)
+        recipes = recipe_for_dish(soup_recipes_cache, dish_name, d["role"])
+        if recipes:
+            ingredients = []
+            for recipe in recipes:
+                amount, unit = ingredient_amount(d["portions"], recipe["norm"] or 0,
+                                                 recipe["unit"] or "g", recipe["waste_rate"] or 0)
+                ingredients.append(f'{recipe["ingredient"]} – {amount:.2f} {unit}')
+            ingredient_summary = "; ".join(ingredients)
+        else:
+            main_ing = extract_main_ingredient(dish_name)
+            group = map_ingredient_to_norm_group(main_ing, dish_name, d["role"])
+            norm = norms_cache.get(group, {"standard": 100, "unit": "g"})
+            amount, unit = ingredient_amount(d["portions"], norm["standard"], norm.get("unit") or "g")
+            ingredient_summary = f"{main_ing} – {amount:.2f} {unit}"
 
         if ca == "TRƯA":
             prep_time = "07:30"
@@ -360,7 +372,8 @@ def generate_daily_auto_fill(date_str, day_of_week, weekly_menu, portions_info, 
             "stt": stt,
             "ca": ca,
             "dish_name": dish_name,
-            "main_ingredient": f"{main_ing} – {total_ing_kg} kg",
+            "main_ingredient": ingredient_summary,
+            "role": d["role"],
             "portions": d["portions"],
             "prep_time": prep_time,
             "cook_time": cook_time,
